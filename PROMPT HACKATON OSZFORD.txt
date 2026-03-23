@@ -1,0 +1,296 @@
+Comportate como un experto en Hardware, S.O, en IA, en Ingenieria de software, en BD relacionales y NO relacionales, en Frontend, en BackEnd, en API FastAPI/Python, en redes, en Docker, en vagrant, AntiGravity IDE y VM. 
+Cuento con un PC de escritorio con un procesador Intel core 15 9400 cpu 2.90 GHz , 64 bits x64, 16 GB RAM. S.O Windows 11 pro version 25 Hz. Con la siguiente arquitectura de trabajo para desarrollo de Software en la nube:
+
+* **Windows 11  Pro version 25 Hz:** Host principal.
+* **VM Oracle y se instalo Linux Ubunto en un VM usando para ello Vagrant.         
+* **Docker Desktop:** Corriendo sobre WSL2 (limitado a 4GB RAM) y se instalo una imagen de MYSQL esta fucionando y se configuro sus variables de entorno.  
+* **VS Code:** Tu centro de mando conectándose a VM Linux y Docker usando SSH.
+* **Google 'Antigravity' AI IDE. Para este proyecto vamos a usar Antigravity IDE en lugar de VS Code. Al instalar Antigravity IDE se selecciono la opcion 'Import VS Code' y 'Agent-driven development'.
+
+Ahora estamos participando en una Hackaton en la institucion educativa PONAO para resolver siguiente problema:
+
+*** DESCRIPCIÓN DEL PROBLEMA ***:
+
+¿QUÉ INTENTAMOS RESOLVER? Con el fin de garantizar el buen estado de los vehículos se realiza un diligenciamiento del formato preoperacional, este evalúa el estado general del vehículo diariamente antes y después
+de la jornada laboral. Actualmente este diligenciamiento lo hacemos a través de una herramienta que hace el proceso extenso y poco práctico. Debido a su longitud y a que los colaboradores deben diligenciar información
+personal todos los días, la participación en las inspecciones es baja. Además, esta herramienta ya está llegando a un estado de obsolecencia que nos impide hacer el proceso dinámico, imposibilitando conectarlo a otros
+sistemas a través de API´s para facilitar las interacciones requeridas para un control efectivo y un manejo efectivo de los datos recolectados.
+
+¿QUÉ CONSECUENCIAS TIENE ESTO? Los colaboradores se reusan a diligenciar el formato, lo hacen con información falsa o no lo completan, esto le puede significar una sanción legal y económica a la empresa en caso de una
+auditoría o un accidente que suceda con un vehículo que no cumpla con los estandares que buscamos validar a traves del formulario.
+
+¿QUÉ BUSCAMOS EN ESTA NUEVA HERRAMIENTA? Es necesario mejorar la experiencia del usuario en el proceso de diligenciamiento del preoperacional, garantizar que los datos registrados sean verídicos, reducir las
+oportunidades de suplantación de un vehículo registrado previamente, conectividad con API´s, generar alertas automáticas, realizar validaciones aleatorias en el transcurso del día, revisiones de documentos públicos
+cómo SOAT, Tecnomecánica, licencias de conducción, multas, etc.
+
+*** Objetivo General ***
+
+Garantizar el buen estado de los vehiculos.
+
+Objetivos Especificos:
+
+- Garantizar que se va a mejorar la experiencia del usuario en el proceso de diligenciamiento del preoperacional.
+- Garantizar que los datos registrados en el proceso de diligenciamiento del preoperacional sean verídicos.
+- Garantizar que el diligenciamiento del formato preoperacional debe ser práctico y no debe ser extenso. Ya que deben diligenciar información personal todos los días. 
+- Garantizar la conexion a otros sistemas a través de API´s para facilitar las interacciones requeridas para un control y manejo efectivo de los datos recolectados.
+
+REQUERIMIENTOS FUNCIONALES:
+1.	Se requiere que, cuando el personal ingrese a la aplicacion aparezcan 4 apartados:
+		- Inspección de Motocicletas (automotor)
+		- Inspección de Bicicletas 
+		- Inspecciones de Patinetas eléctricas
+		- Inspección de Motos Eléctricas
+
+	Que le permitan registrar la motocicleta cuando sea la primera vez y que pueda validarlo constantemente para garantizar su veracidad.Los demás medios de transporte el sistema deberá dirigirlo a una pestaña
+	donde pueda seleccionar el activo fijo correspondiente al vehículo, y la selección del turno diurno/nocturno. Deberá aparecer la imagen de una motocicleta para facilitar la realización de la inspección, la
+	cual se levará a cabo mediante la siguiente clasificación:
+		- Verde: Bueno
+		- Amarilo: Deteriorado
+		- Rojo: Malo
+	
+	Adicionalmente, en todo momento el sistema deberá mostrar al colaborador las instrucciones y el significado de los colores. Si el colaborador cambia de motocicleta, el sistema debe permitirle actualizar
+	los datos del vehículo en cualquier momento. Una vez el colaborador realice la inspección y seleccione la opción de enviar, deberá aparecer un mensaje de confirmación indicando que los datos suministrados
+	son correctos. En caso de que el colaborador indique que no son correctos, el sistema deberá habilitar nuevamente la opción para actualizar la información del vehículo.
+
+2.	TABLAS DE LA BD
+	- DATOS DEL COLABORADOR:
+		- Id_Colaborador (PK). 
+		- Nombre.
+		- Cargo.
+		- Licencia de conducción (con su vigencia y categorías, restricciones, etc.)
+		- Visualización de multas (Se realiza a traves de una API al SIMIT).
+	- DATOS DEL SERVICIO:
+		- Id_Colaborador (PK).
+		- Fecha de la inspección del vehículo (con hora detallada YYYY-MM-DDThh:mm:ss.sssZ) (PK).
+		- Puesto (lugar donde se presta el servicio).
+		- Turno que realizará.
+	- DATOS DEL VEHÍCULO:
+		- Id_Colaborador (PK).
+		- Fecha de la inspección del vehículo (con hora detallada YYYY-MM-DDThh:mm:ss.sssZ) (PK).
+		- Placa (PK).
+		- Qué vehículo es, si es de la empresa o es propio del colaborador.
+		- SOAT.
+		- Tecnicomecánica.
+		- Verificación de las partes del vehículo (usar una API para que se conecte con el metodo de IA y poder comparar la img de la parte del vehiculo con los datos entrenados del vehiculo y de acuerdo
+		  al resultado almacenar su estado como: Bueno(Verde); Deteriorado (Amarillo); Malo(Rojo).
+		- Registro de kilometraje.
+		- Historial de mantenimientos.
+		- Reporte de Novedad. (nuevo campo)
+		
+	Nota: El colaborador, al iniciar su turno o recorrido, debe realizar la inspección del vehículo y registrar el kilometraje inicial al finalizar el recorrido o turno, deberá diligenciar únicamente el kilometraje
+	final o reportar alguna novedad. Esta información permitirá calcular la distancia recorrida durante el día y servirá como base de datos para determinar el total de kilómetros recorridos por la flota vehicular de
+	la empresa. Algunos vehículos son propios de la empresa que se usan para hacer recorridos en los puestos que se presta el servicio, otros son vehículos propios de los colaboradores para hacer recorridos en la
+	ciudad (por ejemplo, escoltas, supervisores, analistas, etc).
+
+	¿QUÉ REPORTES O RESULTADOS SE DEBEN GENERAR?
+		- Reporte diario de preoperacionales diligenciados: cantidad de fallas o alertas reportadas.
+		- Porcentaje de cumplimiento y colaboradores que no realizaron la inspección.
+		- También alertas de vencimiento de la documentación legal (licencia, SOAT, tecnomecanica, etc).
+
+*** METODOLOGIA DE TRABAJO ***:
+
+NOTA: Se debe tener en cuenta que se inicia a trabajar en la maquina local y al final el despliegue se hara en AWS o Google Cloud. Para escoger donde se hara el despliegue se debe tener en cuenta los costos de las
+instancias que vamos a necesitar para ejecutar este proyecto en la nube. La mas economica por razones economicas.
+
+1.	Crear la estructura de directorios en la maquina local en la ruta: 'E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM' y su repositorio remoto en github. Ten en cuanta que los 3 integrantes vamos a trabajar por tareas y
+	en forma remota. Se debe Explicar datalladamente como usar el repositorio local y el remoto por cada uno de los integrantes para que no se vayan a mezclar las actualizaciones que cada integrante realize al
+	repositorio remoto. Al final se debe poder clonar el repositorio remoto con la version final para sustentacion. 
+	
+*** SOLUCION ***
+Estamos ante un problema clásico de **fricción en la UX (Experiencia de Usuario)** que deriva en datos de mala calidad. Vamos a construir una solución robusta pero ágil. Dado que trabajas con **Antigravity IDE**
+(basado en agentes), aprovecharemos esa potencia para automatizar la estructura.
+
+Aquí tienes el paso a paso detallado del **Punto 1 de la Metodología**, configurando tu entorno local y la estrategia de colaboración en Git para los 3 integrantes.
+
+## 1. Configuración del Repositorio Remoto (GitHub)
+
+Antes de tocar código, necesitamos el "punto de encuentro" en la nube.
+
+1.  Ve a [GitHub](https://github.com/) y crea un nuevo repositorio llamado `OSZFORD-SYSTEM`.
+2.  Configúralo como **Público** (para la sustentación) o **Privado** (invitando a tus 2 compañeros en *Settings > Collaborators*).
+3.  **IMPORTANTE:** No inicialices con README ni `.gitignore` desde la web; lo haremos desde tu terminal para evitar conflictos de historial.
+
+## 2. Estructura de Directorios en la Máquina Local
+
+Tu ruta raíz es `E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM`. Vamos a crear una arquitectura limpia siguiendo el patrón de **FastAPI** y **Docker**.
+
+### Paso a paso en la terminal (PowerShell o CMD):
+
+# 1. Entrar a la unidad E:
+
+# 2. Navegar a la ruta (ajusta si las carpetas no existen)
+cd \VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM
+
+# 3. Crear la estructura de carpetas:
+mkdir backend, frontend, ai_models, docker, docs
+
+backend         # Para la API con FastAPI
+frontend        # Para la interfaz (Sugerencia: React o Vue)
+ai_models       # Para los scripts de comparación de imágenes (IA)
+docker          # Configuraciones de contenedores
+docs            # Documentación del proyecto
+
+## 3. Inicialización de Git y Conexión Remota
+
+Ahora vincularemos tu carpeta local con el mundo exterior.
+
+# Inicializa Git en la carpeta 'E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM'
+git init
+
+# Crear un archivo .gitignore básico (para no subir basura del sistema o de Python)
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM> echo "node_modules/
+__pycache__/
+.env
+.venv
+*.pyc
+.vagrant/" > .gitignore
+
+# Vincular con el repositorio de GitHub (Reemplaza 'USUARIO' con tu nombre de cuenta 'jesumartt-67' Copiado del Repositorio Remoto -> (git@github.com:jesumartt-67/OSZFORD-SYSTEM.git))
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>git remote add origin https://github.com/jesumartt-67/OSZFORD-SYSTEM.git  
+
+# Crear un archivo inicial
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>echo "# OSZFORD SYSTEM - Hackaton PONAO" > README.md
+
+# Primer commit y subida a la rama principal
+git add .
+git commit -m "Initial commit: Estructura de carpetas y README"
+git branch -M main
+git push -u origin main
+```
+
+---
+
+## 4. Estrategia de Trabajo en Equipo (Git Flow Simplificado)
+
+Para que los 3 integrantes no mezclen sus cables (conflictos de código), usaremos **Ramas (Branches)**. Nadie debe trabajar directamente sobre `main`.
+
+### Protocolo para cada integrante:
+
+Cada vez que un integrante inicie una tarea (ejemplo: Crear el modelo de base de datos), debe seguir estos 3 pasos:
+
+1.  **Sincronizar:** Traer lo último del equipo.
+    `git pull origin main`
+2.  **Crear Rama:** Crear un espacio de trabajo propio.
+    `git checkout -b feature/nombre-de-la-tarea`
+3.  **Subir Cambios:** Al terminar, subir su rama.
+    `git add .`
+    `git commit -m "Descripción clara de lo que hiciste"`
+    `git push origin feature/nombre-de-la-tarea`
+
+### Integración Final:
+En GitHub, el encargado del proyecto hará un **Pull Request (PR)** para fusionar esa rama con `main` después de revisar que el código funcione.
+
+---
+
+## 5. Configuración en Antigravity IDE
+
+Como seleccionaste **"Import VS Code"** y **"Agent-driven development"**, el IDE ya reconoce tu estructura.
+
+1.  Abre **Antigravity IDE**.
+2.  Abre la carpeta `E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM`.
+3.  **Instrucción al Agente:** Puedes decirle al chat de IA del IDE:
+    > *"Agent, detecta mi estructura de carpetas. En la carpeta /backend, inicializa un proyecto FastAPI con un archivo main.py básico y un Dockerfile que use Python 3.10-slim. Asegúrate de que el puerto sea el 8000."*
+
+---
+
+## 6. Elección de Nube (Costos)
+
+Para el despliegue final, mi recomendación experta es **Google Cloud (GCP)** a través de su programa **Free Tier**.
+
+* **¿Por qué?:** Google ofrece una instancia `e2-micro` siempre gratuita en ciertas regiones.
+* **IA:** Si vamos a usar APIs de visión (para comparar las fotos de las motos), Google Cloud Vision tiene una capa gratuita muy generosa de 1,000 unidades al mes.
+* **Docker:** Podemos usar **Cloud Run**, que solo cobra por milisegundo de ejecución (si no hay nadie usando la app, el costo es $0).
+
+---
+
+### Siguiente Paso Sugerido
+¿Deseas que diseñe el **Modelo de Entidad-Relación (Base de Datos)** en MySQL para las tablas de Colaborador, Servicio y Vehículo, incluyendo los campos de IA que solicitaste? Sería el corazón de nuestra solución.
+
+
+
+
+	
+	
+-------------------------------------------------------------------------------------	
+2.	Creacion de la BD 
+   
+
+
+
+
+
+2. Conexion a traves de un login.
+2.1 Un método de seguridad al inicio de sesión como Autenticación Multifactor (MFA/2FA) o alguno otro que sea facil de implementar y de manejar para el usuario. 
+
+3. Idearse un metodo para verificar la  entrega del vehiculo a otros usuario. El cual permita hacerle seguimiento al vehiculo y verificar su estado actual.
+
+4. Un medio de almacenamineto de informacion persistente. Puede ser una Base de datos relacional o NO SQL. Recomiendame cual es la mejor opcion y porque? 
+
+5. Necesitamos una estrategia usando imagenes de los vehiculos para dos casos:
+
+5.1 Caso 1: Verificar el estado del vehiculo. Para hacer la verificacion se manejan tres colores: verde si esta bueno, amarillo deteriorado y rojo malo. 
+5.2 Caso 2: Mostrar la informacion del vehiculo. Los informes para verificar si el estado del vehiculo se deben permitir en cualquier horario, o sea en tiempo real. 
+
+
+- Necesito que nos recomiendes la mejor estrategia usando computacion visual para resolver el caso 1 y 2 del punto 5. Ten en cuenta que vamos a tomar fotos de los vehiculos a verificar.  
+- Necesitamos almacenar fotos de los vehiculos en la BD, pero necesitamos almacenarlas de la manera mas optima, eficiente y facil de implementar.
+- Necesitamos desplegar en la nube usando Google Cloud. Pero recomienda si necesitamos crear una MV en google cloud y una MV local vagrant. Usamos el IDE AntiGravity y github. Como trabajamos e integramos
+  toda esta tecnologia y no morir en el intento. Dame el paso a paso.  
+
+*** respuesta ****
+
+## 1. Arquitectura y Base de Datos: MySQL
+
+*** Por qué MySQL: *** El modelo de datos de OSZFORD tiene relaciones claras y rígidas: un **Colaborador** tiene una **Licencia**, realiza un **Turno** y utiliza un **Vehículo** específico.
+    Las bases de datos relacionales garantizan la integridad referencial y son ideales para reportes de cumplimiento y auditoría.
+* **Gestión de Imágenes:** **Nunca** almacenes fotos directamente en la base de datos (como BLOBs). [cite_start]La estrategia más óptima y eficiente es guardar el archivo físico en un bucket de **Google Cloud Storage** y almacenar únicamente la **URL (link)** en una columna de texto en MySQL[cite: 103].
+
+
+## 2. Estrategia de Computación Visual (Casos 1 y 2)
+
+[cite_start]Para resolver la verificación del estado del vehículo mediante fotos[cite: 102], implementaremos lo siguiente:
+
+### Caso 1: Verificación de Estado (Semáforo)
+Utilizaremos un modelo de **Clasificación de Imágenes** (puedes usar *AutoML Vision* de Google Cloud).
+1.  [cite_start]**Entrenamiento:** Se entrena el modelo con fotos etiquetadas de vehículos en estado Bueno (Verde), Deteriorado (Amarillo) y Malo (Rojo)[cite: 100].
+2.  **Inferencia:** El colaborador toma una foto; la IA analiza daños visibles (abolladuras, luces rotas) y sugiere un color. [cite_start]Esto reduce la subjetividad y el fraude[cite: 41].
+
+### Caso 2: Información en Tiempo Real
+[cite_start]Implementaremos **Reconocimiento Óptico de Caracteres (OCR)** para la placa y **Detección de Objetos** para documentos[cite: 41, 102].
+1.  [cite_start]Al detectar la placa, el sistema cruza los datos con la base de datos (o APIs externas como R6) para mostrar vigencia de SOAT y Tecnomecánica instantáneamente[cite: 41, 80].
+
+---
+
+## 3. Despliegue y Entorno de Desarrollo
+
+### Infraestructura en la Nube (Google Cloud - GCP)
+No es recomendable usar una Máquina Virtual (Compute Engine) para todo, ya que es difícil de escalar. Sugiero:
+* **Frontend:** Firebase Hosting o Cloud Run (Contenedores).
+* **Backend:** Cloud Run (ideal para APIs en Python/Docker).
+* **BD:** Cloud SQL (Instancia administrada de MySQL).
+
+### Entorno Local (Vagrant + Docker)
+Sí, usa **Vagrant** para crear una MV que simule exactamente el entorno de producción de Google Cloud. Dentro de esa MV, usa **Docker Compose** para levantar tu API y tu base de datos local. 
+Esto garantiza que "si funciona en tu PC, funciona en la nube"[cite: 92].
+
+---
+
+## 4. Paso a Paso para la Implementación
+
+### Fase 1: Configuración y Backend
+1.  [cite_start]**Git & GitHub:** Crea un repositorio y conecta tu IDE AntiGravity[cite: 105]. Define ramas para `dev` y `main`.
+2.  [cite_start]**Modelado SQL:** Crea las tablas de Usuarios (con login por email), Vehículos, Documentos y Preoperacionales[cite: 42, 96].
+3.  [cite_start]**API (FastAPI/Python):** Desarrolla los endpoints para recibir el kilometraje inicial/final y las fotos[cite: 49].
+
+### Fase 2: Inteligencia Artificial y Frontend
+4.  [cite_start]**Integración de Visión:** Configura la API de Google Vision para extraer texto de licencias y placas[cite: 41, 44].
+5.  [cite_start]**Frontend Amigable:** Diseña una interfaz con botones grandes y alto contraste, pensando en los usuarios de amplio rango de edad (18-60 años)[cite: 59, 95].
+6.  [cite_start]**Validaciones:** Implementa el flujo de confirmación de datos: si el usuario marca "No Correcto", el sistema permite actualizar antes de enviar[cite: 78, 79].
+
+### Fase 3: Despliegue y Alertas
+7.  [cite_start]**Dockerización:** Crea el `Dockerfile` de tu app y súbelo a Google Artifact Registry[cite: 92].
+8.  [cite_start]**Alertas Automáticas:** Configura un servicio (Cloud Functions) que revise diariamente la BD y envíe correos o notificaciones si un SOAT está por vencer[cite: 54].
+
+---
+
+¿Te gustaría que diseñara el esquema de la base de datos MySQL para comenzar con la Fase 1?
