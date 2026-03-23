@@ -1,0 +1,352 @@
+Comportate como un experto en Hardware, S.O, en IA, en Ingenieria de software, en BD relacionales y NO relacionales, en Frontend, en BackEnd, en API FastAPI/Python, en redes, en Docker, en vagrant, AntiGravity IDE y VM. 
+Cuento con un PC de escritorio con un procesador Intel core 15 9400 cpu 2.90 GHz , 64 bits x64, 16 GB RAM. S.O Windows 11 pro version 25 Hz. Con la siguiente arquitectura de trabajo para desarrollo de Software en la nube:
+
+* **Windows 11  Pro version 25 Hz:** Host principal.
+* **VM Oracle y se instalo Linux Ubunto en un VM usando para ello Vagrant.         
+* **Docker Desktop:** Corriendo sobre WSL2 (limitado a 4GB RAM) y se instalo una imagen de MYSQL esta fucionando y se configuro sus variables de entorno.  
+* **VS Code:** Tu centro de mando conectándose a VM Linux y Docker usando SSH.
+* **Google 'Antigravity' AI IDE. Para este proyecto vamos a usar Antigravity IDE en lugar de VS Code. Al instalar Antigravity IDE se selecciono la opcion 'Import VS Code' y 'Agent-driven development'.
+* **Token generado por GitHub: <MI_TOKEN_AQUÍ>
+
+Ahora estamos participando en una Hackaton en la institucion educativa PONAO para resolver siguiente problema:
+
+*** DESCRIPCIÓN DEL PROBLEMA ***:
+
+¿QUÉ INTENTAMOS RESOLVER? Con el fin de garantizar el buen estado de los vehículos se realiza un diligenciamiento del formato preoperacional, este evalúa el estado general del vehículo diariamente antes y después
+de la jornada laboral. Actualmente este diligenciamiento lo hacemos a través de una herramienta que hace el proceso extenso y poco práctico. Debido a su longitud y a que los colaboradores deben diligenciar información
+personal todos los días, la participación en las inspecciones es baja. Además, esta herramienta ya está llegando a un estado de obsolecencia que nos impide hacer el proceso dinámico, imposibilitando conectarlo a otros
+sistemas a través de API´s para facilitar las interacciones requeridas para un control efectivo y un manejo efectivo de los datos recolectados.
+
+¿QUÉ CONSECUENCIAS TIENE ESTO? Los colaboradores se reusan a diligenciar el formato, lo hacen con información falsa o no lo completan, esto le puede significar una sanción legal y económica a la empresa en caso de una
+auditoría o un accidente que suceda con un vehículo que no cumpla con los estandares que buscamos validar a traves del formulario.
+
+¿QUÉ BUSCAMOS EN ESTA NUEVA HERRAMIENTA? Es necesario mejorar la experiencia del usuario en el proceso de diligenciamiento del preoperacional, garantizar que los datos registrados sean verídicos, reducir las
+oportunidades de suplantación de un vehículo registrado previamente, conectividad con API´s, generar alertas automáticas, realizar validaciones aleatorias en el transcurso del día, revisiones de documentos públicos
+cómo SOAT, Tecnomecánica, licencias de conducción, multas, etc.
+
+*** Objetivo General ***
+
+Garantizar el buen estado de los vehiculos.
+
+Objetivos Especificos:
+
+- Garantizar que se va a mejorar la experiencia del usuario en el proceso de diligenciamiento del preoperacional.
+- Garantizar que los datos registrados en el proceso de diligenciamiento del preoperacional sean verídicos.
+- Garantizar que el diligenciamiento del formato preoperacional debe ser práctico y no debe ser extenso. Ya que deben diligenciar información personal todos los días. 
+- Garantizar la conexion a otros sistemas a través de API´s para facilitar las interacciones requeridas para un control y manejo efectivo de los datos recolectados.
+
+REQUERIMIENTOS FUNCIONALES:
+1.	Se requiere que, cuando el personal ingrese a la aplicacion aparezcan 4 apartados:
+		- Inspección de Motocicletas (automotor)
+		- Inspección de Bicicletas 
+		- Inspecciones de Patinetas eléctricas
+		- Inspección de Motos Eléctricas
+
+	Que le permitan registrar la motocicleta cuando sea la primera vez y que pueda validarlo constantemente para garantizar su veracidad.Los demás medios de transporte el sistema deberá dirigirlo a una pestaña
+	donde pueda seleccionar el activo fijo correspondiente al vehículo, y la selección del turno diurno/nocturno. Deberá aparecer la imagen de una motocicleta para facilitar la realización de la inspección, la
+	cual se levará a cabo mediante la siguiente clasificación:
+		- Verde: Bueno
+		- Amarilo: Deteriorado
+		- Rojo: Malo
+	
+	Adicionalmente, en todo momento el sistema deberá mostrar al colaborador las instrucciones y el significado de los colores. Si el colaborador cambia de motocicleta, el sistema debe permitirle actualizar
+	los datos del vehículo en cualquier momento. Una vez el colaborador realice la inspección y seleccione la opción de enviar, deberá aparecer un mensaje de confirmación indicando que los datos suministrados
+	son correctos. En caso de que el colaborador indique que no son correctos, el sistema deberá habilitar nuevamente la opción para actualizar la información del vehículo.
+
+2.	TABLAS DE LA BD
+	- DATOS DEL COLABORADOR:
+		- Id_Colaborador (PK). 
+		- Nombre.
+		- Cargo.
+		- Licencia de conducción (con su vigencia y categorías, restricciones, etc.)
+		- Visualización de multas (Se realiza a traves de una API al SIMIT).
+	- DATOS DEL SERVICIO:
+		- Id_Colaborador (PK).
+		- Fecha de la inspección del vehículo (con hora detallada YYYY-MM-DDThh:mm:ss.sssZ) (PK).
+		- Puesto (lugar donde se presta el servicio).
+		- Turno que realizará.
+	- DATOS DEL VEHÍCULO:
+		- Id_Colaborador (PK).
+		- Fecha de la inspección del vehículo (con hora detallada YYYY-MM-DDThh:mm:ss.sssZ) (PK).
+		- Placa (PK).
+		- Qué vehículo es, si es de la empresa o es propio del colaborador.
+		- SOAT.
+		- Tecnicomecánica.
+		- Verificación de las partes del vehículo (usar una API para que se conecte con el metodo de IA y poder comparar la img de la parte del vehiculo con los datos entrenados del vehiculo y de acuerdo
+		  al resultado almacenar su estado como: Bueno(Verde); Deteriorado (Amarillo); Malo(Rojo).
+		- Registro de kilometraje.
+		- Historial de mantenimientos.
+		- Reporte de Novedad. (nuevo campo)
+		
+	Nota: El colaborador, al iniciar su turno o recorrido, debe realizar la inspección del vehículo y registrar el kilometraje inicial al finalizar el recorrido o turno, deberá diligenciar únicamente el kilometraje
+	final o reportar alguna novedad. Esta información permitirá calcular la distancia recorrida durante el día y servirá como base de datos para determinar el total de kilómetros recorridos por la flota vehicular de
+	la empresa. Algunos vehículos son propios de la empresa que se usan para hacer recorridos en los puestos que se presta el servicio, otros son vehículos propios de los colaboradores para hacer recorridos en la
+	ciudad (por ejemplo, escoltas, supervisores, analistas, etc).
+
+	¿QUÉ REPORTES O RESULTADOS SE DEBEN GENERAR?
+		- Reporte diario de preoperacionales diligenciados: cantidad de fallas o alertas reportadas.
+		- Porcentaje de cumplimiento y colaboradores que no realizaron la inspección.
+		- También alertas de vencimiento de la documentación legal (licencia, SOAT, tecnomecanica, etc).
+
+*** METODOLOGIA DE TRABAJO ***:
+
+NOTA: Se debe tener en cuenta que se inicia a trabajar en la maquina local y al final el despliegue se hara en AWS o Google Cloud. Para escoger donde se hara el despliegue se debe tener en cuenta los costos de las
+instancias que vamos a necesitar para ejecutar este proyecto en la nube. La mas economica por razones economicas.
+
+*** NOTA IMPORTANTE **** 
+Si vas a usar este prompt en un futuro como guia, ten presente que el PASO 'A' ya tiene como requerimiento el uso de la función "Synced Folders". Por lo tanto HAZ CASO OMISO a la linea 230 ***IMPORTANTE** y continua
+en la linea '269' PUNTO 2. Fase de Ignición: Encendido del Entorno  
+
+### PASO A: ###	Crear la estructura de directorios en la maquina local en la ruta: 'E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM' y usar la función "Synced Folders" (Carpetas Sincronizadas, entre la Maquina Local y la MV) 
+	de Vagrant y el repositorio en GitHub. Ten en cuanta que los 3 integrantes vamos a trabajar por tareas y en forma remota. Se debe Explicar datalladamente como usar el repositorio local y el remoto por cada uno de
+	los integrantes para que no se vayan a mezclar las actualizaciones que cada integrante realize al repositorio remoto. Al final se debe poder clonar el repositorio remoto con la version final para sustentacion. 
+	
+*** SOLUCION ***
+Estamos ante un problema clásico de **fricción en la UX (Experiencia de Usuario)** que deriva en datos de mala calidad. Vamos a construir una solución robusta pero ágil. Dado que trabajas con **Antigravity IDE**
+(basado en agentes), aprovecharemos esa potencia para automatizar la estructura.
+
+Aquí tienes el paso a paso detallado del **Punto 1 de la Metodología**, configurando tu entorno local y la estrategia de colaboración en Git para los 3 integrantes.
+
+## 1. Configuración del Repositorio Remoto (GitHub)
+
+Antes de tocar código, necesitamos el "punto de encuentro" en la nube.
+
+1.1.  Ve a [GitHub](https://github.com/) y crea un nuevo repositorio llamado `OSZFORD-SYSTEM`.
+1.2.  Configúralo como **Público** (para la sustentación) o **Privado** (invitando a tus 2 compañeros en *Settings > Collaborators*).
+1.3.  **IMPORTANTE:** No inicialices con README ni `.gitignore` desde la web; lo haremos desde tu terminal para evitar conflictos de historial.
+
+## 2. Estructura de Directorios en la Máquina Local
+
+Tu ruta raíz es `E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM`. Vamos a crear una arquitectura limpia siguiendo el patrón de **FastAPI** y **Docker**.
+
+### Paso a paso en la terminal (PowerShell o CMD):
+
+# 2.1. Entrar a la unidad E:
+
+# 2.2. Navegar a la ruta (ajusta si las carpetas no existen)
+cd \VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM
+
+# 2.3. Crear la estructura de carpetas:
+mkdir backend, frontend, ai_models, docker, docs
+
+backend         # Para la API con FastAPI
+frontend        # Para la interfaz (Sugerencia: React o Vue)
+ai_models       # Para los scripts de comparación de imágenes (IA)
+docker          # Configuraciones de contenedores
+docs            # Documentación del proyecto
+
+## 3. Inicialización de Git y Conexión Remota
+
+Ahora vincularemos tu carpeta local con el mundo exterior.
+
+# Inicializa Git en la carpeta 'E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM'
+git init
+
+# Crear un archivo .gitignore básico (para no subir basura del sistema o de Python)
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM> echo "node_modules/
+__pycache__/
+.env
+.venv
+*.pyc
+.vagrant/" > .gitignore
+
+# Vincular con el repositorio de GitHub (Reemplaza 'USUARIO' con tu nombre de cuenta 'jesumartt-67' Copiado del Repositorio Remoto -> (git@github.com:jesumartt-67/OSZFORD-SYSTEM.git))
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>git remote add origin https://github.com/jesumartt-67/OSZFORD-SYSTEM.git  
+
+# Crear un archivo inicial
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>echo "# OSZFORD SYSTEM - Hackaton PONAO" > README.md
+
+# Primer commit y subida a la rama principal
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>git add .
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>git commit -m "Initial commit: Estructura de carpetas y README"
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>git branch -M main
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>git push -u origin main
+
+## 4. Estrategia de Trabajo en Equipo (Git Flow Simplificado)
+
+Para que los 3 integrantes no mezclen sus cables (conflictos de código), usaremos **Ramas (Branches)**. Nadie debe trabajar directamente sobre `main`.
+
+### Protocolo para cada integrante:
+
+Cada vez que un integrante inicie una tarea (ejemplo: Crear el modelo de base de datos), debe seguir estos 3 pasos:
+
+4.1.  **Sincronizar:** Traer lo último del equipo.
+    `git pull origin main`
+4.2.  **Crear Rama:** Crear un espacio de trabajo propio "Una rama = Una tarea (o funcionalidad)". O sea, una rama por cada Tarea.
+    `git checkout -b feature/jesus-nombre-de-la-tarea`
+	
+	***NOTA:*** aqui la rama se llama feature/nombre-de-la-tarea
+	
+	4.2.1.	La Anatomía del Nombre
+			feature/: Es un prefijo o "carpeta virtual". Se usa para organizar las ramas por su propósito. Es un estándar en la industria (Git Flow).
+			nombre-de-la-tarea: Es el identificador específico de lo que estás haciendo (ej: registro-vehiculo, api-simit, login-colaborador).
+	4.2.2. ¿Por qué usar el prefijo feature/?
+			En herramientas como GitHub o tu propio Antigravity IDE, usar carpetas (prefijos) ayuda a mantener el orden:
+			feature/: Para nuevas funcionalidades (lo que más usarán ahora).
+			bugfix/: Para corregir errores que encuentren en el camino.
+			docs/: Para cuando alguien solo esté redactando manuales o documentación.
+	4.2.3.	Ejemplos Reales para tu Equipo
+			Si los 3 integrantes se reparten el trabajo inicial, así deberían crear sus ramas:
+
+			Integrante 1 (Base de Datos):
+				git checkout -b feature/jm-setup-db-mysql
+			Integrante 2 (Backend/FastAPI):
+				git checkout -b feature/kr-api-inspeccion-motos
+			Integrante 3 (Frontend/Interfaz):
+				git checkout -b feature/as-ui-formulario-preoperacional	
+	
+4.3.  **Subir Cambios:** Al terminar, subir su rama.
+    `git add .`
+    `git commit -m "Descripción clara de lo que hiciste"`
+    `git push origin feature/nombre-de-la-tarea` 
+
+### Integración Final:
+En GitHub, el encargado del proyecto hará un **Pull Request (PR)** para fusionar esa rama con `main` después de revisar que el código funcione.
+
+## 5. Configuración en Antigravity IDE
+
+Como seleccionaste **"Import VS Code"** y **"Agent-driven development"**, el IDE ya reconoce tu estructura.
+
+5.1.	Abre **Antigravity IDE**.
+5.2.	Abre la carpeta `E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM`.
+5.3.	** Tu Primera Tarea con el Agente: **
+		Como mencionaste que el desarrollo se basa en FastAPI (Python) y que ya tienes MySQL en Docker, lo más inteligente es inicializar el entorno de backend para que el Agente conozca las herramientas
+		que usaremos. Escribe lo siguiente en el chat del Agente (el panel de la derecha):
+		*** "Agente, vamos a iniciar el backend. Crea un archivo main.py dentro de la carpeta /backend con una ruta básica de FastAPI que devuelva un mensaje de bienvenida. También, genera un archivo requirements.txt
+		con fastapi, uvicorn y sqlalchemy." ***
+
+		**NOTA:** Desde una terminal (Terminal > New Terminal) de Antigravity, instala las dependencias ejecutando `pip install -r backend/requirements.txt` y luego iniciar el servidor con
+		`uvicorn backend.main:app --reload` (asegúrate de estar en el directorio raíz). 
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+*** IMPORTANTE: *** RESOLVER LA SIGUIENTE CONFIGURACION: SE ME OLVIDO ESCRIBIR AL INICIO DEL PASO 'A' linea '95' LO SIGUIENTE: Al Crear la Estructura de Directorios debemos usar la función "Synced Folders"
+				(Carpetas Sincronizadas, entre la Maquina Local y la MV) de Vagrant y el repositorio en GitHub. Ahora inicio con toda la aruitectura de trabajo apagada (ANTIGRAVITY, VM, VAGRANT Y DOCKER).
+			
+Este "olvido" es, de hecho, el eslabón perdido para que tu arquitectura sea realmente profesional. Al usar 'Synced Folders', logras que lo que escribes en tu Antigravity IDE (en Windows) aparezca instantáneamente
+dentro de la VM (Ubuntu) de Vagrant sin tener que estar copiando archivos por SSH manualmente. Como tienes todo apagado, vamos a realizar un "Cold Boot" (Arranque en frío) de tu entorno de ingeniería, configurando
+la sincronización y Git desde cero.			
+			
+*** SOLUCION A LA SINCRONIZACION DE CARPETAS "Synced Folders" ***
+ 			
+1. El Corazón de la Sincronización: El Vagrantfile
+
+Tienes un Vagrantfile que está actuando como un "servidor compartido" para varios proyectos, lo cual es arriesgado porque podrías terminar con archivos de un jardín infantil en tu sistema de inspección de vehículos.
+Para mantener la arquitectura y que los 3 integrantes de la Hackaton trabajen sin mezclar datos, la mejor práctica es la Segmentación por Proyecto. Aquí tienes cómo configurar tu 'Vagrantfile' para manejar MULTIPLES
+CARPETAS SINCRONIZADAS de forma independiente y segura:
+ 
+1.1. Configuración Multiproyecto del Vagrantfile:
+Debes modificar la sección de 'synced_folder' para que cada proyecto tenga su propio "túnel" hacia la VM. 
+----------------------------------------------
+Vagrantfile
+---------------------------------------------- 
+# --- PROYECTO 1: ChatBot Jardín Melositos ---
+  config.vm.synced_folder "E:/VagrantVM/Ubuntu-Focal/Poyecto_Machine_Learning", "/home/vagrant/Poyecto_Machine_Learning", 
+    create: true,
+    owner: "vagrant",
+    group: "vagrant"
+
+  # --- PROYECTO 2: OSZFORD-SYSTEM (HACKATON) ---
+  # Usamos una ruta relativa '.' para que funcione en las PC de tus compañeros
+  config.vm.synced_folder "./OSZFORD-SYSTEM", "/home/vagrant/OSZFORD-SYSTEM", 
+    create: true,
+    owner: "vagrant",
+    group: "vagrant"
+---------------------------------------------	
+¿Por qué esta configuración evita mezclas? Aislamiento en la VM:
+- En Ubuntu, los proyectos vivirán en carpetas separadas: /home/vagrant/Poyecto_Machine_Learning y /home/vagrant/OSZFORD-SYSTEM. 
+- Rutas Relativas (./): Al usar ./OSZFORD-SYSTEM, Vagrant buscará la carpeta dentro de donde esté el Vagrantfile. Esto es vital para que tus compañeros puedan clonar el repo y que les funcione sin tener que crear
+						exactamente la ruta E:/VagrantVM/....	
+	
+
+2. Fase de Ignición: Encendido del Entorno
+
+2.1. Levantar la Máquina Virtual (Vagrant):
+2.1.1	Abre una terminal (PowerShell, en la Maquina local Windows) en E:\VagrantVM\Ubuntu-Focal\ y ejecuta: -> vagrant up
+		*** NOTA: *** Vagrant montará la carpeta compartida automáticamente durante el arranque		
+
+		*** ALERTA *** El Paso Crítico (Carpetas Sincronizadas)
+		En la terminal (PowerShell) dice: *** Resuming suspended VM.... *** Esto significa que la máquina estaba en estado "suspendido" (como una laptop cerrada) y simplemente "despertó". ¡Cuidado aquí!:
+		Cuando haces cambios en el Vagrantfile (como agregar la nueva carpeta sincronizada de OSZFORD-SYSTEM), Vagrant NO aplica esos cambios si la máquina solo se reanuda (resume). Para que la VM
+		reconozca la nueva estructura de directorios que configuramos, debes aplicar un reinicio suave ejecutando:  *** -> vagrant reload ***
+		¿Por qué hacer esto? El comando 'reload' es equivalente a apagar y encender, pero lo más importante es que vuelve a leer el 'Vagrantfile' y monta las carpetas compartidas que acabamos de definir.
+
+3. Iniciar Docker Desktop
+Ejecuta Docker Desktop en la maquina local Windows. Al estar sobre WSL2, Docker compartirá el kernel de Linux. Asegúrate de que el contenedor de MySQL esté en estado Running.
+			
+4. Abrir Antigravity IDE: 
+
+Como al instalarlo seleccionaste "Import VS Code", el IDE ya debería reconocer tu carpeta local. Inicia el IDE.
+
+4.1. ¿Como me conecto al túnel SSH?
+
+4.1.1 Opción A: Usar el Host ubuntu-vagrant (*** Recomendada ***)
+				Es como "teletransportar" el IDE dentro de la VM.
+				- Ventaja: El explorador de archivos (a la izquierda) mostrará directamente las carpetas de Linux. Cuando el Agente cree archivos, se ejecutarán con el Python de la VM, no el de Windows.
+				- Cómo hacerlo: Usa la combinacion de teclas 'Ctrl + Shift + P' en el cajon que se abre el la parte superior escribe 'Remote-SSH...' se despliega una ventana, selecciona
+   				  'Remote-SSH:Connect to SSH Host...' y Enter, se despliega una ventana, haz clic en 'ubuntu-vagrant'. Espera a que la barra inferior se ponga de color azul o verde indicando "SSH: ubuntu-vagrant".
+				- Abre la carpeta del proyecto: En el centro de tu pantalla, donde dice Workspaces, haz clic directamente en: 'OSZFORD-SYSTEM (E:\VagrantVM\Ubuntu-Focal)'. Esto cargará los archivos en el explorador
+  				  de la izquierda.
+				- Abre una Terminal: Haz clic en Terminal -> New Terminal. Se abre la terminal de Antigravity en 'PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>'
+				- Solo te falta "cruzar el puente" a la VM: escribe: 'vagrant ssh'. El prompt cambiará a 'vagrant@ubuntu-focal:~$'
+
+4.1.2 Opción B: vagrant ssh en la terminal
+				Es como abrir una ventana de chat con la VM.
+				- Ventaja: Es infalible si el túnel del IDE falla.
+				- Limitación: El IDE sigue "pensando" que está en Windows, así que tendrías que configurar el intérprete de Python manualmente.
+				- Cómo hacerlo: Haz clic en Terminal -> New Terminal. Por defecto abrirá en Windows (PowerShell).
+				- Salta a la VM: Para que la terminal se sitúe en /home/vagrant/OSZFORD-SYSTEM, simplemente escribe este comando en esa terminal que acabas de abrir: 'vagrant ssh'.
+				  ¿Qué pasará ahora? El prompt cambiará a 'vagrant@ubuntu-focal:~$'. Ahora escribe: 'cd /home/vagrant/OSZFORD-SYSTEM'. ¡Listo! Ya estás dentro del corazón de tu servidor Linux.	
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+## 6.	Crear Nueva Rama 'feature/jesus-Estructura-dir-y-setup': 
+
+		Como ya estás en la terminal SSH, ejecuta los siguientes comandos desde la terminal de Antigravity (donde ves vagrant@ubuntu-focal): 
+		- Asegúrate de estar en la carpeta del proyecto:
+		  Escribe: cd OSZFORD-SYSTEM (o la ruta completa /home/vagrant/OSZFORD-SYSTEM).
+		  El prompt debería cambiar a: 'vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$'
+		- Crea tu rama de trabajo: 'git checkout -b feature/jesus-Estructura-dir-y-setup' 
+		  *** NOTA: *** Para que la rama aparezca en la web de GitHub, debes "empujarla" (hacer un push) al servidor remoto.
+		- Configura tu identidad (Solo si no lo has hecho en esta VM): Si quieres verificar que Git te reconoce correctamente antes de hacer el envío a GitHub, ejecuta este comando en tu terminal de Antigravity:
+		  'git config --list'. Si en la lista aparecen tu nombre y correo, estás listo para continuar sin repetir el paso. 
+		- Preparación de Docker (Dockerfile):
+		  Para que tu API de FastAPI corra en contenedores, necesitamos un Dockerfile. Para ello vamos a usar al Agente de Antigravity que tienes a la derecha.	Escríbele esto al Agente:
+		  "Agente, ya estoy en mi rama de Git 'feature/jesus-Estructura-dir-y-setup'. Por favor: 1)Crea un archivo llamado Dockerfile dentro de la carpeta /backend. 2)Usa una imagen base de python:3.9-slim.
+		   3)Configura el directorio de trabajo en /app, copia el requirements.txt e instala las dependencias. 4)Expón el puerto 8000 y añade el comando para ejecutar uvicorn."
+		  **NOTA:** Al ser carpetas sincronizadas, verás aparecer el archivo en tu explorador de Antigravity inmediatamente.
+		- Sincronización y "Push" al Repositorio Remoto:
+		  Una vez el Agente termine de crear el Dockerfile y los archivos de backend, vamos a subir todo para que tus compañeros lo vean. Ejecuta estos comandos en tu terminal verde:
+		  - Ver qué archivos cambiaron: 'git status'
+		  - Agregar todo lo nuevo: 'git add .'
+		  - Guardar los cambios: 'git commit -m "feat: estructura inicial, dockerfile y setup de backend"'
+		  - Subir la rama a GitHub: 'git push origin feature/jesus-Estructura-dir-y-setup'
+									Username: jesumartt-67
+									Password (Token GitHub): <MI_TOKEN_AQUÍ>
+		  - Corrección y Sincronización con main:
+			Para que otra persona pueda bajarlo, lo ideal es unirlo a main desde la web de GitHub (haciendo un Pull Request), pero si quieres hacerlo rápido por comandos para que ellos le den git pull, haz esto:
+			- git checkout main:
+			  ** error: ** Your local changes to the following files would be overwritten by checkout:
+				docs/PROMPT HACKATON OSZFORD - PASO A.txt
+			  R/ Te está impidiendo cambiar de rama porque tienes cambios en el archivo docs/PROMPT HACKATON OSZFORD - PASO A.txt que no has guardado (ni con un commit ni con un stash).
+			  ¿Cómo lo solucionamos? Quédate en tu rama y guarda todo.
+			  Primero, asegúrate de que esos cambios en docs se queden grabados en tu rama feature/jesus-Estructura-dir-y-setup:
+			  - git add .
+			  - git commit -m "docs: actualizacion de prompt y documentacion del paso A"	
+			- git pull origin main
+			- git merge feature/jesus-Estructura-dir-y-setup
+			- git push origin main
+		  	
+## 7. Elección de Nube (Costos)
+
+Para el despliegue final, mi recomendación experta es **Google Cloud (GCP)** a través de su programa **Free Tier**.
+
+* **¿Por qué?:** Google ofrece una instancia `e2-micro` siempre gratuita en ciertas regiones.
+* **IA:** Si vamos a usar APIs de visión (para comparar las fotos de las motos), Google Cloud Vision tiene una capa gratuita muy generosa de 1,000 unidades al mes.
+* **Docker:** Podemos usar **Cloud Run**, que solo cobra por milisegundo de ejecución (si no hay nadie usando la app, el costo es $0).
+
+
+### PASO B: ###	Creacion de la BD
+¿Te gustaría que una vez creados los archivos, configuremos la conexión a la base de datos MySQL que ya tienes corriendo en Docker?
+¿Deseas que diseñe el **Modelo de Entidad-Relación (Base de Datos)** en MySQL para las tablas de Colaborador, Servicio y Vehículo, incluyendo los campos de IA que solicitaste? Sería el corazón de nuestra solución.
+-------------------------------------------------------------------------------------	
