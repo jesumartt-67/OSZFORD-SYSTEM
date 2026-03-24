@@ -89,149 +89,297 @@ REQUERIMIENTOS FUNCIONALES:
 
 *** METODOLOGIA DE TRABAJO ***:
 
-NOTA: Se debe tener en cuenta que se inicia a trabajar en la maquina local y al final el despliegue se hara en AWS o Google Cloud. Para escoger donde se hara el despliegue se debe tener en cuenta los costos de las
-instancias que vamos a necesitar para ejecutar este proyecto en la nube. La mas economica por razones economicas.
+### PASO A: ARCHIVO 'PROMPT HACKATON OSZFORD - PASO A' ### Crear la estructura de directorios en la maquina local en la ruta: 'E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM' y usar la función "Synced Folders"
+	(Carpetas Sincronizadas, entre la Maquina Local y la MV) de Vagrant y el repositorio en GitHub. Ten en cuanta que los 3 integrantes vamos a trabajar por tareas y en forma remota. Se debe Explicar datalladamente
+	como usar el repositorio local y el remoto por cada uno de los integrantes para que no se vayan a mezclar las actualizaciones que cada integrante realize al repositorio remoto. Al final se debe poder clonar el
+	repositorio remoto con la version final para sustentacion.  
 
-### PASO A: ###	Crear la estructura de directorios en la maquina local en la ruta: 'E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM' y su repositorio remoto en github. Ten en cuanta que los 3 integrantes vamos a trabajar por
-	tareas y en forma remota. Se debe Explicar datalladamente como usar el repositorio local y el remoto por cada uno de los integrantes para que no se vayan a mezclar las actualizaciones que cada integrante realize al
-	repositorio remoto. Al final se debe poder clonar el repositorio remoto con la version final para sustentacion. 
-	
+ 
+### PASO B: ###	 Conectividad y Creacion de la Base de Datos
+Ahora que la infraestructura de Git es sólida, vamos a por el código. El reto aquí es que tu FastAPI (corriendo dentro de la VM de Linux) hable con el MySQL (corriendo en Docker Desktop sobre Windows).   
+Ayudame a diseñar el **Modelo de Entidad-Relación (Base de Datos)** en MySQL para las tablas de Colaborador, Servicio y Vehículo, incluyendo los campos de IA que se solicita.
+Ten encuenta que el acceso a la aplicacion se hace con login y un método de seguridad al inicio de sesión como Autenticación Multifactor (MFA/2FA).
+
 *** SOLUCION ***
-Estamos ante un problema clásico de **fricción en la UX (Experiencia de Usuario)** que deriva en datos de mala calidad. Vamos a construir una solución robusta pero ágil. Dado que trabajas con **Antigravity IDE**
-(basado en agentes), aprovecharemos esa potencia para automatizar la estructura.
+1. Definición de la Base de Datos: MySQL
+Para este proyecto, la mejor opción es una Base de Datos Relacional (MySQL).
 
-Aquí tienes el paso a paso detallado del **Punto 1 de la Metodología**, configurando tu entorno local y la estrategia de colaboración en Git para los 3 integrantes.
+- Razón: Necesitamos integridad referencial estricta para asegurar que cada inspección esté amarrada legalmente a un colaborador, un vehículo y una fecha exacta para evitar fraudes en auditorías.
+- Estrategia de Almacenamiento de Imágenes (Punto 5 del requerimiento)
+- Optimización: No guardaremos las fotos en la BD.
+- Implementación: Los archivos físicos irán a Google Cloud Storage y en MySQL guardaremos únicamente la URL de acceso. Esto mantiene la base de datos ligera y rápida.
 
-## 1. Configuración del Repositorio Remoto (GitHub)
+** NOTA: ** Vamos ha aprovechar el "Free Tier" (Capa Gratuita) de Google Cloud para cumplir con tu restricción económica:
 
-Antes de tocar código, necesitamos el "punto de encuentro" en la nube.
+1.1. Google Cloud Storage (Fotos): Google ofrece una capa gratuita permanente para almacenamiento de objetos.
+	 1.1.1. Capacidad: Tienes hasta 5 GB de almacenamiento gratis al mes (clase de almacenamiento "Standard").
+	 1.1.2. Operaciones: Las primeras 5,000 operaciones de escritura y 50,000 de lectura al mes son gratuitas.
+	 1.1.3. Estrategia: Como solo guardaremos fotos de inspecciones diarias y estas son archivos livianos, 5 GB son más que suficientes para el prototipo de la Hackaton.
+1.2. MySQL (Base de Datos): Aquí es donde aplicaremos la mayor optimización económica:	
+	 1.2.1. En Local (Costo $0): Durante el desarrollo, el MySQL no te cuesta nada porque está corriendo en tu propia máquina dentro de Docker Desktop.
+	 1.2.2. En la Nube: Si decidimos subir la base de datos a la nube al final, Google Cloud ofrece créditos de prueba (normalmente $300 USD por 90 días para cuentas nuevas).
+	 1.2.3. Alternativa Gratuita: Si los créditos se agotan, podemos usar una instancia de Cloud SQL pequeña o incluso seguir usando un contenedor de MySQL en una máquina virtual e2-micro
+			que es parte del "Always Free" de Google.
+1.3. Google Vision API (IA para el semáforo y placas):
+	 1.3.1. Costo: Las primeras 1,000 unidades (imágenes) analizadas al mes son gratis.
+	 1.3.2. Uso: Esto es ideal para tu proyecto, ya que puedes procesar 1,000 inspecciones sin pagar un solo centavo por el servicio de Inteligencia Artificial.
 
-1.1.  Ve a [GitHub](https://github.com/) y crea un nuevo repositorio llamado `OSZFORD-SYSTEM`.
-1.2.  Configúralo como **Público** (para la sustentación) o **Privado** (invitando a tus 2 compañeros en *Settings > Collaborators*).
-1.3.  **IMPORTANTE:** No inicialices con README ni `.gitignore` desde la web; lo haremos desde tu terminal para evitar conflictos de historial.
+*** Recomendación técnica: *** Mantengamos MySQL en el Docker local por ahora. Solo cuando estemos a un paso de la sustentación final, lo subiremos a la nube usando los créditos gratuitos de Google.
 
-## 2. Estructura de Directorios en la Máquina Local
+2. El Esquema y creacion de la Base de Datos (init_db.sql):
+Este archivo define la estructura relacional. Incluye la lógica del Token de Relevo (QR) y el campo para el secreto MFA. Ubicación sugerida: /home/vagrant/OSZFORD-SYSTEM/docker/init_db.sql
+	2.1. Crear la BD en MySQL:
+		- Opción A: Desde la terminal de la VM (Recomendado):
+			Si ya estás dentro de la terminal de Ubuntu (donde hiciste el vagrant ssh), debes estar en la carpeta donde vive el archivo .sql.
+			- Navega a la carpeta: cd E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM\docker\
+			- Copia el archivo al contenedor de MySQL: docker cp init_db.sql mysql-db:/tmp/init_db.sql
+			- Ejecuta el SQL: docker exec -it mysql-db mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS oszford_db; USE oszford_db; source /tmp/init_db.sql; SHOW TABLES;" 
+3. Recuperacion de las Credenciales de la BD MySQL:			
+		- Abre una terminal en tu Host (PowerShell).
+		- Veamos el nombre del contenedor de MySQL, ejecuta : 'docker ps'	
+			-----------------------------------------------------------------------------
+			PS E:\VagrantVM\Ubuntu-Focal> docker ps
+			CONTAINER ID   IMAGE       COMMAND                  CREATED       STATUS             PORTS                                           NAMES
+			691594ad6f40   mysql:8.0   "docker-entrypoint.s…"   5 weeks ago   Up About an hour   0.0.0.0:3306->3306/tcp, [::]:3306->3306/tcp   **mysql-db**
+			PS E:\VagrantVM\Ubuntu-Focal>
+			-----------------------------------------------------------------------------
+		- Veamos el contenido de la variable 'MYSQL_ROOT_PASSWORD', ejecuta : docker inspect mysql-db --format='{{range .Config.Env}}{{println .}}{{end}}'
+			***NOTA:*** cambia en la anterior sentencia NOMBRE = 'mysql_db', por el valor de la variable NAMES = 'mysql-db'
+			-----------------------------------------------------------------------------
+			PS E:\VagrantVM\Ubuntu-Focal> docker inspect mysql-db --format='{{range .Config.Env}}{{println .}}{{end}}'
+			MYSQL_ROOT_PASSWORD=***root***
+			MYSQL_DATABASE=testdb
+			...
+			PS E:\VagrantVM\Ubuntu-Focal>
+			------------------------------------------------------------------------------	
+4. Conexion a MySQL:
+			Como el contenedor se llama 'mysql-db' y ya sabemos que el password de root es 'root', ejecuta el sgte comando: 
+			------------------------------------------------------------------------
+			PS E:\VagrantVM\Ubuntu-Focal> docker exec -it mysql-db mysql -u root -proot
+			...
+			Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+			mysql>
 
-Tu ruta raíz es `E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM`. Vamos a crear una arquitectura limpia siguiendo el patrón de **FastAPI** y **Docker**.
+5. Conexión desde FastAPI (database.py):
+Este archivo permite que Python se comunique con el contenedor de MySQL. Usaremos SQLAlchemy, que es el estándar de la industria. Ubicación sugerida: /home/vagrant/OSZFORD-SYSTEM/backend/database.py
+----------------------------------------
+database.py
+----------------------------------------
+...
+# 1. CONFIGURACIÓN DE CREDENCIALES (Hardcoded para desarrollo local seguro)
+# Según tu 'docker inspect', el password de root es 'root'
+DB_USER = "root"
+DB_PASS = "root"
+DB_HOST = "127.0.0.1"  # IP local estándar para evitar problemas de resolución de DNS
+DB_PORT = "3306"
+DB_NAME = "oszford_db"
+...
+---------------------------------------
+6. Preparar el entorno de la VM para que soporte toda la lógica de la Hackatón (Base de Datos + MFA + Seguridad).
+6.1. Instalar pip (El gestor de paquetes): Ejecuta este comando en tu terminal de Ubuntu: sudo apt update && sudo apt install -y python3-pip
+	 **NOTA:** Te pedirá la contraseña si no la has ingresado antes (es vagrant).
+	 -------------------------------------------------------------
+	 vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ sudo apt update && sudo apt install -y python3-pip
+	 Hit:1 http://archive.ubuntu.com/ubuntu focal InRelease
+	 ...
+	 Processing triggers for libc-bin (2.31-0ubuntu9.18) ...
+	 vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$
+	 -------------------------------------------------------------
+6.2. Instalar el "Combo de Desarrollo": Instalar todas las librerías que necesitamos para el PASO B de un solo golpe: pip3 install sqlalchemy pymysql cryptography pyotp
+	 -------------------------------------------------------------
+	 vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ pip3 install sqlalchemy pymysql cryptography pyotp
+	 Collecting sqlalchemy
+	 ...
+	 Successfully installed greenlet-3.1.1 pymysql-1.1.2 pyotp-2.9.0 sqlalchemy-2.0.48 typing-extensions-4.13.2
+	 vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$	
+	 -------------------------------------------------------------
+6.3. Verificación Final: pip3 show pymysql
+	 -------------------------------------------------------------
+	 vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ pip3 show pymysql
+	 Name: pymysql
+	 ...
+	 Required-by:
+	 vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$
+	 -------------------------------------------------------------
 
-### Paso a paso en la terminal (PowerShell o CMD):
 
-# 2.1. Entrar a la unidad E:
+7. Inyectar datos de prueba a las tablas de la BD.
+	7.1. Preparación del Script de Inserción (insert_data.sql):
+		 - Crea un archivo llamado insert_data.sql dentro de tu carpeta sincronizada E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM\docker\. Pega el contenido generado por IA con 3 registros ficticios.	
+		 - Entra a MySQL: docker exec -it mysql-db mysql -u root -proot 
+		 - Ejecuta: SHOW DATABASES;
+			+--------------------+
+			| Database           |
+			+--------------------+
+			| biblioteca         |
+			| information_schema |
+			| mysql              |
+			| oszford_db         |
+			| performance_schema |
+			| sys                |
+			| testdb             |
+			| tienda_tecnologia  |
+			+--------------------+
+			8 rows in set (0.00 sec)
+			mysql>
+		 - Ejecuta: USE oszford_db;
+			mysql> USE oszford_db;
+			Reading table information for completion of table and column names
+			You can turn off this feature to get a quicker startup with -A
+			Database changed
+			mysql>
+		 - Ejecuta: SHOW TABLES;
+			+-----------------------+
+			| Tables_in_oszford_db  |
+			+-----------------------+
+			| colaboradores         |
+			| inspecciones          |
+			| transferencias_relevo |
+			| vehiculos             |
+			+-----------------------+
+			4 rows in set (0.00 sec)
+			mysql>
+		 - Ejecuta: DESCRIBE colaboradores;
+			mysql> DESCRIBE colaboradores;
+			+-------------------+--------------+------+-----+---------+----------------+
+			| Field             | Type         | Null | Key | Default | Extra          |
+			+-------------------+--------------+------+-----+---------+----------------+
+			| id_colaborador    | int          | NO   | PRI | NULL    | auto_increment |
+			| cedula            | varchar(15)  | NO   | UNI | NULL    |                |
+			| nombre            | varchar(100) | NO   |     | NULL    |                |
+			| email             | varchar(100) | NO   | UNI | NULL    |                |
+			| password_hash     | varchar(255) | NO   |     | NULL    |                |
+			| mfa_secret        | varchar(32)  | YES  |     | NULL    |                |
+			| cargo             | varchar(50)  | YES  |     | NULL    |                |
+			| licencia_nro      | varchar(20)  | YES  |     | NULL    |                |
+			| licencia_vigencia | date         | YES  |     | NULL    |                |
+			| activo            | tinyint(1)   | YES  |     | 1       |                |
+			+-------------------+--------------+------+-----+---------+----------------+
+			10 rows in set (0.00 sec)
+			mysql>
+		 - Ejecuta: DESCRIBE vehiculos;
+			+---------------------+------------------------------------------------------------------+------+-----+---------+-------+
+			| Field               | Type                                                             | Null | Key | Default | Extra |
+			+---------------------+------------------------------------------------------------------+------+-----+---------+-------+
+			| placa               | varchar(10)                                                      | NO   | PRI | NULL    |       |
+			| tipo                | enum('Moto','Bicicleta','Patineta Eléctrica','Moto Eléctrica') | NO   |     | NULL    |       |
+			| propiedad           | enum('Empresa','Propio')                                         | NO   |     | NULL    |       |
+			| soat_vencimiento    | date                                                             | YES  |     | NULL    |       |
+			| tecnico_vencimiento | date                                                             | YES  |     | NULL    |       |
+			| foto_referencia_url | varchar(255)                                                     | YES  |     | NULL    |       |
+			+---------------------+------------------------------------------------------------------+------+-----+---------+-------+
+			6 rows in set (0.00 sec)
+			mysql>
+		 - Ejecuta: DESCRIBE inspecciones;
+			+-----------------------+---------------------------------+------+-----+-------------------+-------------------+
+			| Field                 | Type                            | Null | Key | Default           | Extra             |
+			+-----------------------+---------------------------------+------+-----+-------------------+-------------------+
+			| id_inspeccion         | int                             | NO   | PRI | NULL              | auto_increment    |
+			| id_colaborador        | int                             | YES  | MUL | NULL              |                   |
+			| placa                 | varchar(10)                     | YES  | MUL | NULL              |                   |
+			| fecha_hora            | timestamp                       | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+			| km_registro           | decimal(10,2)                   | YES  |     | NULL              |                   |
+			| estado_visual_ia      | enum('Verde','Amarillo','Rojo') | YES  |     | NULL              |                   |
+			| url_foto_verificacion | varchar(255)                    | YES  |     | NULL              |                   |
+			| novedades             | text                            | YES  |     | NULL              |                   |
+			+-----------------------+---------------------------------+------+-----+-------------------+-------------------+
+			8 rows in set (0.01 sec)
+			mysql>
+	     - Ejecuta: DESC transferencias_relevo;
+			+----------------------+---------------+------+-----+-------------------+-------------------+
+			| Field                | Type          | Null | Key | Default           | Extra             |
+			+----------------------+---------------+------+-----+-------------------+-------------------+
+			| id_transferencia     | int           | NO   | PRI | NULL              | auto_increment    |
+			| placa                | varchar(10)   | YES  | MUL | NULL              |                   |
+			| id_colaborador_sale  | int           | YES  | MUL | NULL              |                   |
+			| id_colaborador_entra | int           | YES  | MUL | NULL              |                   |
+			| km_entrega           | decimal(10,2) | YES  |     | NULL              |                   |
+			| token_qr_hash        | varchar(64)   | YES  | UNI | NULL              |                   |
+			| fecha_generacion     | timestamp     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+			| confirmada           | tinyint(1)    | YES  |     | 0                 |                   |
+			+----------------------+---------------+------+-----+-------------------+-------------------+
+			8 rows in set (0.00 sec)
+			mysql>
+	7.2. Inyectar los datos en tu contenedor Docker:
+		 - Copia el archivo al contenedor: docker cp E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM\docker\insert_data.sql mysql-db:/tmp/	 
+		 ------------------------------------------------------------------------------------
+		 PS E:\VagrantVM\Ubuntu-Focal> docker cp E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM\docker\insert_data.sql mysql-db:/tmp/
+		 Successfully copied 4.1kB to mysql-db:/tmp/
+		 PS E:\VagrantVM\Ubuntu-Focal>
+		 ------------------------------------------------------------------------------------
+		 - Ejecuta el script en la base de datos: docker exec -it mysql-db mysql -u root -proot oszford_db -e "source /tmp/insert_data.sql;" 
+		 ------------------------------------------------------------------------------------
+		 PS E:\VagrantVM\Ubuntu-Focal> docker exec -it mysql-db mysql -u root -proot oszford_db -e "source /tmp/insert_data.sql;"
+		 mysql: [Warning] Using a password on the command line interface can be insecure.
+		 PS E:\VagrantVM\Ubuntu-Focal>	
+		 ------------------------------------------------------------------------------------
+		 - Verificación de los datos inyectados:
+		 ------------------------------------------------------------------------------------
+		 PS E:\VagrantVM\Ubuntu-Focal> docker exec -it mysql-db mysql -u root -proot oszford_db -e "SELECT nombre, email, licencia_nro FROM colaboradores; SELECT placa, tipo, propiedad FROM vehiculos;"
+		 mysql: [Warning] Using a password on the command line interface can be insecure.
+		 +-----------------+-------------------------+--------------+
+		 | nombre          | email                   | licencia_nro |
+		 +-----------------+-------------------------+--------------+
+		 | Jesús Fernando | j.fernando@ponao.edu.co | 70123456-A   |
+		 | Maria Restrepo  | m.restrepo@ponao.edu.co | 80987654-B   |
+		 | Carlos Angulo   | c.angulo@ponao.edu.co   | 90554433-C   |
+		 +-----------------+-------------------------+--------------+
+		 +---------+-----------------+-----------+
+		 | placa   | tipo            | propiedad |
+		 +---------+-----------------+-----------+
+		 | BJC-123 | Bicicleta       | Empresa   |
+		 | GHT-45C | Moto            | Propio    |
+		 | XYZ-89E | Moto Eléctrica  | Propio    |
+		 |---------+-----------------+-----------+
+		 PS E:\VagrantVM\Ubuntu-Focal>
+		 ------------------------------------------------------------------------------------
+		 - Modificar un campo de un registro específico (en este caso el email de Jesus Fernando en la tabla Colaboradores), el comando que debes usar es UPDATE.
+		   Como estamos trabajando desde tu PowerShell conectado al contenedor de Docker, ejecuta el siguiente comando:
+		   -------------------------------------------------------------------------------------
+		   PS E:\VagrantVM\Ubuntu-Focal> docker exec -it mysql-db mysql -u root -proot oszford_db -e "UPDATE colaboradores SET email = 'jesumartt@gmail.com' WHERE id_colaborador = 101;"
+		   mysql: [Warning] Using a password on the command line interface can be insecure.
+		   PS E:\VagrantVM\Ubuntu-Focal>
+		   -------------------------------------------------------------------------------------
+		 
+8. Crear la Rama de Git y actualizar repostorio remoto y el main
+	8.1. Crear y consolidar la rama de Base de Datos
+		 En tu terminal de PowerShell (dentro de E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM):	Como estás usando Windows 11 como tu "Host principal", lo ideal es que el control de versiones (Git) se maneje desde allí.
+		 - Razón 1 (Identidad): Tus credenciales de GitHub y el token que mencionaste están configurados (o se configuran más fácil) en Windows.
+		 - Razón 2 (Rendimiento): Git en Windows es ligeramente más rápido al manejar el sistema de archivos local que a través de la capa de virtualización de la VM.
+		 - Razón 3 (Sincronización): Vagrant sincroniza automáticamente los cambios. Si haces un git pull en Windows, los archivos se actualizan instantáneamente dentro de la VM de Ubuntu.
+		 Vamos a ejecutar las siguientes instrucciones:
+		 - Crear una nueva rama para los cambios de la BD y saltar a ella. Para que Git reconozca tu repositorio, debes entrar a la carpeta raíz de tu aplicación. Ejecuta: cd OSZFORD-SYSTEM 
+		 - Verifica que Git esté ahí: git status
+		 - Crear la rama de la base de datos: git checkout -b feature/jesus-setup-db-oszford
+		 - Agregar el archivo SQL: git add docker/insert_data.sql
+		 - Guardar los cambios: git commit -m "feat: estructura de tablas e inyeccion de datos de prueba punto 7 paso B"
+		 - Cambiar a main para actualizar a tus compañeros: git checkout main
+		 - Unir los cambios y subir al servidor:
+			- git merge feature/jesus-setup-db-oszford
+			- git push origin main
+	8.2. Mirando tu última captura de Antigravity, encontré el "culpable" de por qué no ves todo actualizado en el repositorio remoto.
+		 Si te fijas en la esquina inferior izquierda de tu Antigravity, verás que dice: feature/jesus-setup-db-oszford*
+		 Ese asterisco (*) y el color del nombre significan que tienes cambios locales que aún no se han subido. Además, en el explorador de archivos, nombres como database.py aparecen en verde o con una "U",
+		 lo que indica que Git los reconoce como archivos nuevos pero "untracked" (no seguidos) o no confirmados.
+		 Para que el repositorio remoto quede idéntico a lo que ves en tu Antigravity, sigue este orden exacto en tu PowerShell: 
+		 -
 
-# 2.2. Navegar a la ruta (ajusta si las carpetas no existen)
-cd \VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM
 
-# 2.3. Crear la estructura de carpetas:
-mkdir backend, frontend, ai_models, docker, docs
 
-backend         # Para la API con FastAPI
-frontend        # Para la interfaz (Sugerencia: React o Vue)
-ai_models       # Para los scripts de comparación de imágenes (IA)
-docker          # Configuraciones de contenedores
-docs            # Documentación del proyecto
 
-## 3. Inicialización de Git y Conexión Remota
-
-Ahora vincularemos tu carpeta local con el mundo exterior.
-
-# Inicializa Git en la carpeta 'E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM'
-git init
-
-# Crear un archivo .gitignore básico (para no subir basura del sistema o de Python)
-PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM> echo "node_modules/
-__pycache__/
-.env
-.venv
-*.pyc
-.vagrant/" > .gitignore
-
-# Vincular con el repositorio de GitHub (Reemplaza 'USUARIO' con tu nombre de cuenta 'jesumartt-67' Copiado del Repositorio Remoto -> (git@github.com:jesumartt-67/OSZFORD-SYSTEM.git))
-PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>git remote add origin https://github.com/jesumartt-67/OSZFORD-SYSTEM.git  
-
-# Crear un archivo inicial
-PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>echo "# OSZFORD SYSTEM - Hackaton PONAO" > README.md
-
-# Primer commit y subida a la rama principal
-PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>git add .
-PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>git commit -m "Initial commit: Estructura de carpetas y README"
-PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>git branch -M main
-PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM>git push -u origin main
-
-## 4. Estrategia de Trabajo en Equipo (Git Flow Simplificado)
-
-Para que los 3 integrantes no mezclen sus cables (conflictos de código), usaremos **Ramas (Branches)**. Nadie debe trabajar directamente sobre `main`.
-
-### Protocolo para cada integrante:
-
-Cada vez que un integrante inicie una tarea (ejemplo: Crear el modelo de base de datos), debe seguir estos 3 pasos:
-
-4.1.  **Sincronizar:** Traer lo último del equipo.
-    `git pull origin main`
-4.2.  **Crear Rama:** Crear un espacio de trabajo propio "Una rama = Una tarea (o funcionalidad)". O sea, una rama por cada Tarea.
-    `git checkout -b feature/jesus-nombre-de-la-tarea`
 	
-	***NOTA:*** aqui la rama se llama feature/nombre-de-la-tarea
-	
-	4.2.1.	La Anatomía del Nombre
-			feature/: Es un prefijo o "carpeta virtual". Se usa para organizar las ramas por su propósito. Es un estándar en la industria (Git Flow).
-			nombre-de-la-tarea: Es el identificador específico de lo que estás haciendo (ej: registro-vehiculo, api-simit, login-colaborador).
-	4.2.2. ¿Por qué usar el prefijo feature/?
-			En herramientas como GitHub o tu propio Antigravity IDE, usar carpetas (prefijos) ayuda a mantener el orden:
-			feature/: Para nuevas funcionalidades (lo que más usarán ahora).
-			bugfix/: Para corregir errores que encuentren en el camino.
-			docs/: Para cuando alguien solo esté redactando manuales o documentación.
-	4.2.3.	Ejemplos Reales para tu Equipo
-			Si los 3 integrantes se reparten el trabajo inicial, así deberían crear sus ramas:
 
-			Integrante 1 (Base de Datos):
-				git checkout -b feature/jm-setup-db-mysql
-			Integrante 2 (Backend/FastAPI):
-				git checkout -b feature/kr-api-inspeccion-motos
-			Integrante 3 (Frontend/Interfaz):
-				git checkout -b feature/as-ui-formulario-preoperacional	
-	
-4.3.  **Subir Cambios:** Al terminar, subir su rama.
-    `git add .`
-    `git commit -m "Descripción clara de lo que hiciste"`
-    `git push origin feature/nombre-de-la-tarea` 
+Desde tu terminal SSH en AntiGravity: 'git checkout -b feature/jesus-setup-db-mysql'	 
 
-### Integración Final:
-En GitHub, el encargado del proyecto hará un **Pull Request (PR)** para fusionar esa rama con `main` después de revisar que el código funcione.
-
-## 5. Configuración en Antigravity IDE
-
-Como seleccionaste **"Import VS Code"** y **"Agent-driven development"**, el IDE ya reconoce tu estructura.
-
-5.1.	Abre **Antigravity IDE**.
-5.2.	Abre la carpeta `E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM`.
-5.3.	** Tu Primera Tarea con el Agente: **
-		Como mencionaste que el desarrollo se basa en FastAPI (Python) y que ya tienes MySQL en Docker, lo más inteligente es inicializar el entorno de backend para que el Agente conozca las herramientas
-		que usaremos. Escribe lo siguiente en el chat del Agente (el panel de la derecha):
-		*** "Agente, vamos a iniciar el backend. Crea un archivo main.py dentro de la carpeta /backend con una ruta básica de FastAPI que devuelva un mensaje de bienvenida. También, genera un archivo requirements.txt
-		con fastapi, uvicorn y sqlalchemy." ***
-
-		**NOTA:** Puedes instalar las dependencias ejecutando `pip install -r backend/requirements.txt` y luego iniciar el servidor con `uvicorn backend.main:app --reload` (asegúrate de estar en el directorio raíz). 
-
-## 6. Elección de Nube (Costos)
-
-Para el despliegue final, mi recomendación experta es **Google Cloud (GCP)** a través de su programa **Free Tier**.
-
-* **¿Por qué?:** Google ofrece una instancia `e2-micro` siempre gratuita en ciertas regiones.
-* **IA:** Si vamos a usar APIs de visión (para comparar las fotos de las motos), Google Cloud Vision tiene una capa gratuita muy generosa de 1,000 unidades al mes.
-* **Docker:** Podemos usar **Cloud Run**, que solo cobra por milisegundo de ejecución (si no hay nadie usando la app, el costo es $0).
-
-----------------------------------------------------
-
-### Siguiente Paso Sugerido
-Preparación de Docker: Una vez tengamos esto, el siguiente paso será decirle al Agente que nos cree el Dockerfile para que esa API corra dentro de tu ecosistema de contenedores.
+Siguiente Paso: El archivo models.py diseñado específicamente para tu base de datos oszford_db
+Una vez tengas las librerías instaladas, ya podemos crear el archivo que mapea la Cédula y los demás campos.
 
 
-### PASO B: ###	Creacion de la BD
-¿Te gustaría que una vez creados los archivos, configuremos la conexión a la base de datos MySQL que ya tienes corriendo en Docker?
-¿Deseas que diseñe el **Modelo de Entidad-Relación (Base de Datos)** en MySQL para las tablas de Colaborador, Servicio y Vehículo, incluyendo los campos de IA que solicitaste? Sería el corazón de nuestra solución.
+
 -------------------------------------------------------------------------------------	
  
-   
+
+
 
 
 

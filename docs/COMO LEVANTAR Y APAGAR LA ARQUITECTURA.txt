@@ -1,0 +1,56 @@
+Vamos ha asegurarnos que el entorno de ingeniería esté plenamente operativo. Dado que tienes todo apagado, seguiremos un protocolo de **Arranque en Frío (Cold Boot)** para garantizar que las carpetas sincronizadas
+y los contenedores se comuniquen correctamente.
+
+Aquí tienes el paso a paso detallado para levantar la arquitectura:
+
+### 1. Fase de Infraestructura (Vagrant y VM)
+Forzar la lectura del `Vagrantfile` para que reconozca la carpeta `OSZFORD-SYSTEM`.
+
+* **Paso 1.1:** Abre una terminal de **PowerShell** en tu Host (Windows 11).
+* **Paso 1.2:** Navega a la carpeta raíz de tu entorno virtual:	`cd E:\VagrantVM\Ubuntu-Focal\`.
+* **Paso 1.3:** Ejecuta el comando de reinicio para aplicar los cambios de "Synced Folders":`vagrant up`.
+				
+### 2. Fase de Servicios (Docker)
+Ahora que la VM está corriendo, necesitamos que el motor de base de datos esté disponible para la API.
+
+* **Paso 2.1:** Abre la aplicación **Docker Desktop** en Windows.
+* **Paso 2.2:** Verifica que el motor esté "Running" (Icono verde en la esquina inferior).
+* **Paso 2.3:** Asegúrate de que el contenedor de **MySQL** esté encendido. Si no lo está, inícialo desde la interfaz de Docker Desktop.
+
+### 3. Fase de Desarrollo (AntiGravity IDE)
+Con los cimientos listos, entraremos a tu centro de mando.
+
+* **Paso 3.1:** Inicia **AntiGravity IDE**.
+* **Paso 3.2:** Conéctate al túnel SSH (Recomendado):
+			3.2.1.  Presiona `Ctrl + Shift + P`.
+			3.2.2.  Escribe `Remote-SSH: Connect to SSH Host...`.
+			3.2.3.  Selecciona `ubuntu-vagrant`.
+* **Paso 3.3:** Abre la carpeta del proyecto en el explorador del IDE: `E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM`.
+
+### 4. Verificación de Sincronización
+Para confirmar que el "puente" entre Windows y Linux funciona:
+
+* **Paso 4.1:** Abre una **Terminal** en AntiGravity (`Terminal -> New Terminal`).
+* **Paso 4.2:** Entra a la VM: `vagrant ssh`.
+* **Paso 4.3:** Navega a la carpeta compartida: `cd ~/OSZFORD-SYSTEM` o `cd /home/vagrant/OSZFORD-SYSTEM`.
+* **Paso 4.4:** Verifica que ves las carpetas creadas anteriormente (`backend`, `frontend`, `docker`, etc.) ejecutando el comando: `ls -l`.
+
+Aquí tienes el "Protocolo de Cierre Seguro" en 3 pasos:
+
+### 1. Detener los Contenedores (Docker):
+Primero debemos avisarle a MySQL que guarde todo lo que tenga en memoria y se detenga. Como estás en la terminal de la VM (vagrant@ubuntu-focal), ejecuta:
+------------------------------------------------------------------------
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM\docker> docker stop mysql-db
+mysql-db
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM\docker>
+------------------------------------------------------------------------
+
+### 2. Salir de la VM:
+Si aún tienes el prompt que dice vagrant@ubuntu-focal, escribe: exit
+
+### 3. Apagar la Máquina Virtual: Desde la ruta E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM\docker>, ejecuta:
+-------------------------------------------------------------------------
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM\docker> vagrant halt
+==> default: Attempting graceful shutdown of VM...
+PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM\docker>
+-------------------------------------------------------------------------
