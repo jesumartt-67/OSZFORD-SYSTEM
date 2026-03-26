@@ -1,7 +1,7 @@
 Vamos ha asegurarnos que el entorno de ingeniería esté plenamente operativo. Dado que tienes todo apagado, seguiremos un protocolo de **Arranque en Frío (Cold Boot)** para garantizar que las carpetas sincronizadas
 y los contenedores se comuniquen correctamente.
 
-Aquí tienes el paso a paso detallado para levantar la arquitectura:
+*** Aquí tienes el paso a paso detallado para LEVANTAR la arquitectura: ***
 
 ### 1. Fase de Infraestructura (Vagrant y VM)
 Forzar la lectura del `Vagrantfile` para que reconozca la carpeta `OSZFORD-SYSTEM`.
@@ -35,10 +35,10 @@ Para confirmar que el "puente" entre Windows y Linux funciona:
 * **Paso 4.3:** Navega a la carpeta compartida: `cd ~/OSZFORD-SYSTEM` o `cd /home/vagrant/OSZFORD-SYSTEM`.
 * **Paso 4.4:** Verifica que ves las carpetas creadas anteriormente (`backend`, `frontend`, `docker`, etc.) ejecutando el comando: `ls -l`.
 
-Aquí tienes el "Protocolo de Cierre Seguro" en 3 pasos:
+*** Aquí tienes el "Protocolo de CIERRE Seguro" en 3 pasos: ***
 
 ### 1. Detener los Contenedores (Docker):
-Primero debemos avisarle a MySQL que guarde todo lo que tenga en memoria y se detenga. Como estás en la terminal de la VM (vagrant@ubuntu-focal), ejecuta:
+Primero debemos avisarle a MySQL que guarde todo lo que tenga en memoria y se detenga, ejecuta:
 ------------------------------------------------------------------------
 PS E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM\docker> docker stop mysql-db
 mysql-db

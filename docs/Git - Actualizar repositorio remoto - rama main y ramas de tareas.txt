@@ -1,0 +1,67 @@
+## 4. Estrategia de Trabajo en Equipo (Git Flow Simplificado)
+
+Para que los 3 integrantes no mezclen sus cables (conflictos de código), usaremos **Ramas (Branches)**. Nadie debe trabajar directamente sobre `main`.
+
+### Protocolo para cada integrante:
+
+Cada vez que un integrante inicie una tarea (ejemplo: Crear el modelo de base de datos), debe seguir estos 3 pasos:
+
+4.1.  **Sincronizar:** Traer lo último del equipo.
+    `git pull origin main`
+4.2.  **Crear Rama:** Crear un espacio de trabajo propio "Una rama = Una tarea (o funcionalidad)". O sea, una rama por cada Tarea.
+    `git checkout -b feature/jesus-nombre-de-la-tarea`
+	
+	***NOTA:*** aqui la rama se llama feature/nombre-de-la-tarea
+	
+	4.2.1.	La Anatomía del Nombre
+			feature/: Es un prefijo o "carpeta virtual". Se usa para organizar las ramas por su propósito. Es un estándar en la industria (Git Flow).
+			nombre-de-la-tarea: Es el identificador específico de lo que estás haciendo (ej: registro-vehiculo, api-simit, login-colaborador).
+	4.2.2. ¿Por qué usar el prefijo feature/?
+			En herramientas como GitHub o tu propio Antigravity IDE, usar carpetas (prefijos) ayuda a mantener el orden:
+			feature/: Para nuevas funcionalidades (lo que más usarán ahora).
+			bugfix/: Para corregir errores que encuentren en el camino.
+			docs/: Para cuando alguien solo esté redactando manuales o documentación.
+	4.2.3.	Ejemplos Reales para tu Equipo
+			Si los 3 integrantes se reparten el trabajo inicial, así deberían crear sus ramas:
+
+			Integrante 1 (Base de Datos):
+				git checkout -b feature/jm-setup-db-mysql
+			Integrante 2 (Backend/FastAPI):
+				git checkout -b feature/kr-api-inspeccion-motos
+			Integrante 3 (Frontend/Interfaz):
+				git checkout -b feature/as-ui-formulario-preoperacional	
+	
+4.3.  **Subir Cambios:** Al terminar, subir su rama.
+    `git add .`
+    `git commit -m "Descripción clara de lo que hiciste"`
+    `git push origin feature/nombre-de-la-tarea` 
+
+
+*** El Paso a Paso Final para Limpiar Todo ***
+Para que tanto la rama de la tarea como la main queden idénticas a lo que tienes en pantalla, ejecuta esta secuencia en tu PowerShell:
+
+1. Consolidar la rama de la tarea (feature/jesus-tarea)
+PowerShell
+# Asegúrate de estar en la rama de la tarea
+git checkout feature/jesus-tarea
+
+# Paso A: "Invitar" a los archivos nuevos (las 'U') y registrar los cambios (la 'M')
+git add .
+
+# Paso B: Guardar la fotografía final
+git commit -m "feat: descripcion"
+
+# Paso C: Subir esta rama específica a GitHub
+git push origin feature/jesus-tarea
+2. Actualizar la rama Principal (main)
+PowerShell
+# Paso D: Cambiar a la rama que ven tus compañeros
+git checkout main
+
+# Paso E: Traer todo el trabajo de la rama de Jesús a la principal
+git merge feature/jesus-tarea
+
+# Paso F: Subir el resultado final a la nube
+git push origin main
+¿Cómo saber si funcionó?
+Una vez que termines el Paso F, las letras U y M en tu VS Code deberían desaparecer. Eso significa que tu copia local y la de la nube están perfectamente "espejadas".

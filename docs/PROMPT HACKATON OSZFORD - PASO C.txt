@@ -1,0 +1,310 @@
+Comportate como un experto en Hardware, S.O, en IA, en Ingenieria de software, en BD relacionales y NO relacionales, en Frontend, en BackEnd, en API FastAPI/Python, en redes, en Docker, en vagrant, AntiGravity IDE y VM. 
+Cuento con un PC de escritorio con un procesador Intel core 15 9400 cpu 2.90 GHz , 64 bits x64, 16 GB RAM. S.O Windows 11 pro version 25 Hz. Con la siguiente arquitectura de trabajo para desarrollo de Software en la nube:
+
+* **Windows 11  Pro version 25 Hz:** Host principal.
+* **VM Oracle y se instalo Linux Ubunto en un VM usando para ello Vagrant.         
+* **Docker Desktop:** Corriendo sobre WSL2 (limitado a 4GB RAM) y se instalo una imagen de MYSQL esta fucionando y se configuro sus variables de entorno.  
+* **VS Code:** Tu centro de mando conectándose a VM Linux y Docker usando SSH.
+* **Google 'Antigravity' AI IDE. Para este proyecto vamos a usar Antigravity IDE en lugar de VS Code. Al instalar Antigravity IDE se selecciono la opcion 'Import VS Code' y 'Agent-driven development'.
+
+Ahora estamos participando en una Hackaton en la institucion educativa PONAO para resolver siguiente problema:
+
+*** DESCRIPCIÓN DEL PROBLEMA ***:
+
+¿QUÉ INTENTAMOS RESOLVER? Con el fin de garantizar el buen estado de los vehículos se realiza un diligenciamiento del formato preoperacional, este evalúa el estado general del vehículo diariamente antes y después
+de la jornada laboral. Actualmente este diligenciamiento lo hacemos a través de una herramienta que hace el proceso extenso y poco práctico. Debido a su longitud y a que los colaboradores deben diligenciar información
+personal todos los días, la participación en las inspecciones es baja. Además, esta herramienta ya está llegando a un estado de obsolecencia que nos impide hacer el proceso dinámico, imposibilitando conectarlo a otros
+sistemas a través de API´s para facilitar las interacciones requeridas para un control efectivo y un manejo efectivo de los datos recolectados.
+
+¿QUÉ CONSECUENCIAS TIENE ESTO? Los colaboradores se reusan a diligenciar el formato, lo hacen con información falsa o no lo completan, esto le puede significar una sanción legal y económica a la empresa en caso de una
+auditoría o un accidente que suceda con un vehículo que no cumpla con los estandares que buscamos validar a traves del formulario.
+
+¿QUÉ BUSCAMOS EN ESTA NUEVA HERRAMIENTA? Es necesario mejorar la experiencia del usuario en el proceso de diligenciamiento del preoperacional, garantizar que los datos registrados sean verídicos, reducir las
+oportunidades de suplantación de un vehículo registrado previamente, conectividad con API´s, generar alertas automáticas, realizar validaciones aleatorias en el transcurso del día, revisiones de documentos públicos
+cómo SOAT, Tecnomecánica, licencias de conducción, multas, etc.
+
+*** Objetivo General ***
+
+Garantizar el buen estado de los vehiculos.
+
+Objetivos Especificos:
+
+- Garantizar que se va a mejorar la experiencia del usuario en el proceso de diligenciamiento del preoperacional.
+- Garantizar que los datos registrados en el proceso de diligenciamiento del preoperacional sean verídicos.
+- Garantizar que el diligenciamiento del formato preoperacional debe ser práctico y no debe ser extenso. Ya que deben diligenciar información personal todos los días. 
+- Garantizar la conexion a otros sistemas a través de API´s para facilitar las interacciones requeridas para un control y manejo efectivo de los datos recolectados.
+
+REQUERIMIENTOS FUNCIONALES:
+1.	Se requiere que, cuando el personal ingrese a la aplicacion aparezcan 4 apartados:
+		- Inspección de Motocicletas (automotor)
+		- Inspección de Bicicletas 
+		- Inspecciones de Patinetas eléctricas
+		- Inspección de Motos Eléctricas
+
+	Que le permitan registrar la motocicleta cuando sea la primera vez y que pueda validarlo constantemente para garantizar su veracidad.Los demás medios de transporte el sistema deberá dirigirlo a una pestaña
+	donde pueda seleccionar el activo fijo correspondiente al vehículo, y la selección del turno diurno/nocturno. Deberá aparecer la imagen de una motocicleta para facilitar la realización de la inspección, la
+	cual se levará a cabo mediante la siguiente clasificación:
+		- Verde: Bueno
+		- Amarilo: Deteriorado
+		- Rojo: Malo
+	
+	Adicionalmente, en todo momento el sistema deberá mostrar al colaborador las instrucciones y el significado de los colores. Si el colaborador cambia de motocicleta, el sistema debe permitirle actualizar
+	los datos del vehículo en cualquier momento. Una vez el colaborador realice la inspección y seleccione la opción de enviar, deberá aparecer un mensaje de confirmación indicando que los datos suministrados
+	son correctos. En caso de que el colaborador indique que no son correctos, el sistema deberá habilitar nuevamente la opción para actualizar la información del vehículo.
+
+2.	TABLAS DE LA BD
+	- DATOS DEL COLABORADOR:
+		- Id_Colaborador (PK). 
+		- Nombre.
+		- Cargo.
+		- Licencia de conducción (con su vigencia y categorías, restricciones, etc.)
+		- Visualización de multas (Se realiza a traves de una API al SIMIT).
+	- DATOS DEL SERVICIO:
+		- Id_Colaborador (PK).
+		- Fecha de la inspección del vehículo (con hora detallada YYYY-MM-DDThh:mm:ss.sssZ) (PK).
+		- Puesto (lugar donde se presta el servicio).
+		- Turno que realizará.
+	- DATOS DEL VEHÍCULO:
+		- Id_Colaborador (PK).
+		- Fecha de la inspección del vehículo (con hora detallada YYYY-MM-DDThh:mm:ss.sssZ) (PK).
+		- Placa (PK).
+		- Qué vehículo es, si es de la empresa o es propio del colaborador.
+		- SOAT.
+		- Tecnicomecánica.
+		- Verificación de las partes del vehículo (usar una API para que se conecte con el metodo de IA y poder comparar la img de la parte del vehiculo con los datos entrenados del vehiculo y de acuerdo
+		  al resultado almacenar su estado como: Bueno(Verde); Deteriorado (Amarillo); Malo(Rojo).
+		- Registro de kilometraje.
+		- Historial de mantenimientos.
+		- Reporte de Novedad. (nuevo campo)
+		
+	Nota: El colaborador, al iniciar su turno o recorrido, debe realizar la inspección del vehículo y registrar el kilometraje inicial al finalizar el recorrido o turno, deberá diligenciar únicamente el kilometraje
+	final o reportar alguna novedad. Esta información permitirá calcular la distancia recorrida durante el día y servirá como base de datos para determinar el total de kilómetros recorridos por la flota vehicular de
+	la empresa. Algunos vehículos son propios de la empresa que se usan para hacer recorridos en los puestos que se presta el servicio, otros son vehículos propios de los colaboradores para hacer recorridos en la
+	ciudad (por ejemplo, escoltas, supervisores, analistas, etc).
+
+	¿QUÉ REPORTES O RESULTADOS SE DEBEN GENERAR?
+		- Reporte diario de preoperacionales diligenciados: cantidad de fallas o alertas reportadas.
+		- Porcentaje de cumplimiento y colaboradores que no realizaron la inspección.
+		- También alertas de vencimiento de la documentación legal (licencia, SOAT, tecnomecanica, etc).
+
+*** METODOLOGIA DE TRABAJO ***:
+
+### PASO A: ARCHIVO 'PROMPT HACKATON OSZFORD - PASO A' ### Crear la estructura de directorios en la maquina local en la ruta: 'E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM' y usar la función "Synced Folders"
+	(Carpetas Sincronizadas, entre la Maquina Local y la MV) de Vagrant y el repositorio en GitHub. Ten en cuanta que los 3 integrantes vamos a trabajar por tareas y en forma remota. Se debe Explicar datalladamente
+	como usar el repositorio local y el remoto por cada uno de los integrantes para que no se vayan a mezclar las actualizaciones que cada integrante realize al repositorio remoto. Al final se debe poder clonar el
+	repositorio remoto con la version final para sustentacion.  
+
+ 
+### PASO B: ###	 Conectividad y Creacion de la Base de Datos
+Ahora que la infraestructura de Git es sólida, vamos a por el código. El reto aquí es que tu FastAPI (corriendo dentro de la VM de Linux) hable con el MySQL (corriendo en Docker Desktop sobre Windows).   
+Ayudame a diseñar el **Modelo de Entidad-Relación (Base de Datos)** en MySQL para las tablas de Colaborador, Servicio y Vehículo, incluyendo los campos de IA que se solicita.
+Ten encuenta que el acceso a la aplicacion se hace con login y un método de seguridad al inicio de sesión como Autenticación Multifactor (MFA/2FA).
+
+### PASO C: ### El archivo models.py diseñado específicamente para tu base de datos oszford_db. Acceso a traves de un login, implementacion de un método de seguridad al inicio de sesión como Autenticación
+Multifactor (MFA/2FA) y formularios para inyectar informacion a la BD.
+ 
+*** SOLUCION ***
+
+1. Creación del Archivo models.py:
+	Este archivo traduce las tablas de oszford_db a clases de Python. Ubícalo en /home/vagrant/OSZFORD-SYSTEM/backend/models.py
+	¿Por qué es vital esta estructura del archivo models.py? 
+	- Integridad en el Relevo: La clase TransferenciaRelevo permite amarrar legalmente quién entrega y quién recibe. El campo confirmada actuará como el disparador para validar que el proceso de inspección fue mutuo.
+	- Seguridad MFA: El campo mfa_secret en la clase Colaborador es el que permitirá inyectar la semilla para generar los códigos de 6 dígitos que se verán en el navegador durante el login.
+	- Optimización de Imágenes: Nota que usamos String(255) para las URLs. Como acordamos, las fotos no se guardan en la base de datos, sino en Google Cloud Storage para mantener la eficiencia del sistema.
+
+2. Implementación de Seguridad (MFA/2FA):
+	Para cumplir con el requerimiento de seguridad, usaremos la librería pyotp. Al iniciar sesión, el sistema generará un código que el usuario debe validar desde su celular.
+	2.1. Implementar la lógica de Seguridad (MFA/2FA) a traves de una capa de servicios dentro de la estructura de Backend:
+		2.1.1. Nombre y Ubicación del Archivo: El archivo se debe llamar auth.py (o security.py). Debe guardarse en la carpeta de lógica de negocio o servicios del backend. 
+			   En la ruta: /home/vagrant/OSZFORD-SYSTEM/backend/auth.py
+	2.2. Estrategia de Entrega de Vehículo (Token QR):
+		 Para el seguimiento y relevo entre colaboradores, el sistema generará un Token de Relevo almacenado en la tabla transferencias_relevo.
+		 Paso 1: El colaborador que entrega genera un QR en la App.
+		 Paso 2: El colaborador que recibe escanea el QR; el sistema valida el km_entrega y crea automáticamente una nueva inspección de inicio de turno.
+		 2.2.1. Implementacion de la Estrategia de Entrega (Token QR): No debemos ver el QR como una imagen estática, sino como un Pase de Abordaje Temporal. El QR contendrá un token firmado (JWT) que expira 
+			    en pocos minutos para garantizar que la entrega sea en tiempo real y segura.
+			    - Concepto Técnico: ¿Qué hay dentro del QR? En lugar de meter datos planos, meteremos un JSON Web Token (JWT). Esto evita que alguien "invente" un QR. El flujo es:
+					- Colaborador A (Sale): Genera el token desde la App.
+					- Sistema: Crea un registro en transferencias_relevo con estado pendiente.
+					- Colaborador B (Entra): Escanea, el sistema valida el token y cambia el estado a confirmada.	
+		 2.2.2. Creación del Servicio de Relevo (relevo.py): Crea este archivo en /home/vagrant/OSZFORD-SYSTEM/backend/relevo.py.
+	2.3. Crear un archivo __init__.py (El toque profesional): touch /home/vagrant/OSZFORD-SYSTEM/backend/__init__.py
+		 Para que Python reconozca la carpeta backend como un paquete válido, crea un archivo vacío dentro de ella.
+	2.4. Verificar Permisos en Docker:
+		 Para que MySQL en Windows acepte la conexión de la VM, debes asegurarte de que el usuario (ej. root) tenga permiso para conectarse desde cualquier host (%).
+		 Si usas el usuario root, entra a tu terminal de Docker o al panel de "Exec" en Docker Desktop y ejecuta esto:
+		 ---------------------------------------
+		 ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'root';
+		 FLUSH PRIVILEGES;
+		 ---------------------------------------
+	2.5. El Endpoint en main.py		   
+		 Ahora conectamos esto a tu API para que sea "evaluable en el navegador".
+		 2.5.1. Ejecutar con el PATH configurado: 
+				Desde la raíz (~/OSZFORD-SYSTEM), ejecuta el comando asegurándote de que Python incluya el directorio actual en su búsqueda:
+					- vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ export PYTHONPATH=$PYTHONPATH:.
+					- vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ python3 -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload 
+															 
+3. Validar
+	3.1. En tu navegador ingresa a: http://localhost:8000/docs
+		 Deberías ver la interfaz de Swagger UI con el título "OSZFORD-SYSTEM API". 
+		 - Ejecutar el Login:
+			- Busca la sección Seguridad y despliega el endpoint POST /auth/login
+			- Haz clic en el botón "Try it out".
+			- Ingresa el email (jesumartt@gmail.com) y la password_plano (admin123) del colaborador.
+			- Presiona "Execute".
+			- ¿Qué deberías recibir?
+				Si los datos coinciden, el servidor responderá con un código 200 y un JSON:
+				----------------------------------------
+				{
+					"message": "Credenciales correctas. Ingrese su código MFA.",
+					"id_colaborador": 101,
+					"mfa_required": true
+				}
+				----------------------------------------
+		- Verificar el MFA:
+			Una vez tengas el id_colaborador de la respuesta anterior, vamos a simular la validación del segundo factor:
+			- Despliega el endpoint POST /auth/verify-mfa.
+			- Haz clic en "Try it out"
+			- Ingresa el id_colaborador (101) y el código de 6 dígitos que genere tu app de autenticación (Google Authenticator) vinculado al mfa_secret de ese usuario.
+				** NOTA: ** Para obtener ese código de 6 dígitos, necesitas vincular el secreto que ya tienes en tu BD en el campo (mfa_secret) con una aplicación de autenticación en tu celular.
+							Como tu secreto para el usuario 101 es JBSWY3DPEHPK3PXP el valor del campo (mfa_secret), aquí tienes los pasos exactos para obtener el código para la Hackaton:
+							1. Instalar una App de Autenticación:
+								- Selecciona la que se llama exactamente "Google Authenticator".
+								- Editor: Debe decir "Google LLC" justo debajo del nombre.
+								- Icono: Es un círculo con los colores de Google (G) o un asterisco de colores (dependiendo de la versión).
+								- Costo: Es 100% gratuita y no tiene suscripciones.
+							2. Vincular tu cuenta manualmente:
+								Como no tenemos un código QR para escanear todavía, debes ingresar los datos a mano en la app:
+								- Abre la aplicación en tu celular y busca el símbolo de "+".
+								- Selecciona "Ingresar llave de configuración" o "Enter a setup key".
+								- Nombre de la cuenta: Escribe algo como OSZFORD-SYSTEM (Jesus).
+								- Tu llave (Key): Escribe el código que viste en tu BD: JBSWY3DPEHPK3PXP.
+								- Tipo de llave: Déjalo en "Basado en tiempo" (Time-based).
+								- Toca en "Agregar".
+							3. Prueba en el Swagger:
+								Una vez que veas el código de 6 dígitos corriendo en tu TCL:
+								- Ve a POST /auth/verify-mfa
+								- Pon el id_colaborador: 101.
+								- Escribe el código que veas en ese instante un tu celular ("App Google Authenticator").
+								- Presiona "Execute".
+								** NOTA ** Si te da un error de "Código incorrecto", lo primero que debemos revisar es que la hora de tu VM de Ubuntu esté sincronizada con la de tu celular.
+									- Verificar la hora actual: ejecuta el siguiente comando y comparalo con la hora de tu celular:
+										---------------------------------------------
+										vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ date
+										Wed Mar 25 02:09:53 UTC 2026
+										vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$
+										---------------------------------------------		
+										** NOTA IMPORTANTE ** Ahí tenemos el problema exacto: tu máquina virtual está configurada en hora UTC (Tiempo Universal Coordinado) y marca las 02:09 AM del miércoles 25,
+											mientras que en Cali apenas son las 9:09 PM del martes 24. Esa diferencia de 5 horas hace que el código MFA que genera tu celular sea rechazado inmediatamente por el servidor.
+										- 1. Cambiar la Zona Horaria a Colombia: 
+												Ejecuta este comando en tu terminal de Ubuntu para igualarlo exactamente a tu celular TCL (ajusta los segundos si es necesario al momento de dar Enter):
+												-------------------------------------------
+												vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ sudo date +%T -s "22:21:00"
+												22:21:00
+												vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$
+												--------------------------------------------
+												Ya puedes hacer de nuevo la prueba en el Swagger (Numeral 3)
+		- Usar el Token para registrar una Inspección:
+			Ahora que eres un usuario "Autenticado", vamos a probar el endpoint de Formularios para inyectar datos reales de una inspección vehicular.
+			- Sigue estos pasos en el Swagger (/docs):
+				- Copia el token: Copia todo el texto que está dentro de las comillas de "access_token" 
+								  **NOTA:** El token es el texto largo y cifrado que te acaba de devolver el servidor en el cuadro de Response body tras ejecutar el /verify-mfa.
+				- Autoriza el Swagger (Opcional): Sube al inicio de la página de Swagger, busca el botón "Authorize" (el candado) y pega el token ahí. Esto le dirá al navegador que ya tienes permiso.	
+				- Prueba el endpoint de Inspección:	
+					- Busca POST /inspeccion/crear
+					- Haz clic en "Try it out"
+					- Ingresa datos de prueba:[id_colaborador: 101; placa: XYZ-89E; km: 1200.5; estado: Verde; novedades: Sin novedades]
+					- Dale a "Execute".	
+
+4. Verificar entrega del vehiculo:
+	Tenemos dos caminos interesantes para completar el flujo de la Hackaton:
+	- Opción A: Relevo por QR: Crear el endpoint que genere un código QR (puedes usar la librería qrcode en Python) que contenga el id_inspeccion. Así, el siguiente encargado solo tiene que escanearlo
+		para recibir el vehículo.
+	- Opción B: Consulta de Historial: Crear un endpoint GET /inspecciones/{placa} para que el administrador pueda ver todas las revisiones que ha tenido ese vehículo específicamente.
+
+	4.1. Implementacion de la Opción A: El Relevo por QR es fundamental para cumplir con el objetivo de la Hackaton de mejorar la experiencia del usuario y garantizar la veracidad de los datos.
+		Al digitalizar el relevo, eliminamos procesos manuales extensos y aseguramos que la entrega del vehículo ocurra en tiempo real. Para implementar este flujo en tu arquitectura actual 
+		(FastAPI en la VM y MySQL en Docker), seguiremos estos pasos:
+		4.1.1. Preparación del Entorno: Necesitamos instalar la librería 'qrcode' y el soporte para imágenes en tu VM Ubuntu de Vagrant. Ejecuta esto en la terminal de la VM:
+				----------------------------------------------
+				vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ pip3 install qrcode[pil]
+				...
+				vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$
+				----------------------------------------------
+		4.1.2. Creación del Servicio de Generación de QR: De acuerdo a tu estructura de archivos, vamos a crear o actualizar el archivo backend/relevo.py para manejar la lógica de creación del código QR.
+				En lugar de solo un ID plano, usaremos el concepto técnico de un 'token firmado'  para evitar que alguien falsifique el código.
+				Puntos claves realizados en el archivo relevo.py:
+				- Parámetro id_inspeccion: Ahora es parte central de la generación, permitiendo que el sistema de OSZFORD sepa exactamente qué registro se está relevando.
+				- Formato de Salida: He añadido el prefijo data:image/png;base64, directamente en la función. Esto permite que el programador de Frontend simplemente ponga el resultado en un <img src="...">
+					sin hacer transformaciones extra.
+				- Seguridad (JWT): Aunque es una Hackaton, usar jwt.encode en lugar de texto plano muestra que te importa la integridad de los datos (evita que un conductor cambie el kilometraje manualmente 
+					editando el código QR).
+				- Manejo de Errores: Se incluyó un bloque try-except para capturar fallos en la generación de la imagen o el token.
+		4.1.3. Implementación del Endpoint en main.py:
+				Ahora conectamos esta lógica a tu API principal para que sea evaluable desde Swagger.
+		4.1.4. Relevo Digital: 
+				- Paso A: Generar el QR (Simulando al Conductor que Sale)
+					- Busca el endpoint POST /relevo/generar-qr.
+					- Haz clic en "Try it out".
+					- Ingresa los datos de prueba usaremos@: [id_inspeccion: 3; id_colaborador: 101; placa: "XYZ-89E"; km_entrega: 15450.5]
+					- Haz clic en Execute.
+					- Resultado esperado: Verás un JSON con qr_base64.
+						- "token_puro": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZF9pbnNwZWNjaW9uIjozLCJpZF9jb2xhYm9yYWRvciI6MTAxLCJwbGFjYSI6IlhZWi04OUUiLCJrbV9lbnRyZWdhIjoxNTQ1MC41LCJleHAiOjE3NzQ1MDAzNTd9.qrk5SvNDX7SkUZ0ioZQ52drPeo_5eSpZgQpinTzwOXQ",
+						- "qr_base64": "data:image/png;base64,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"
+					- *** NOTA: *** Si pegas ese código largo en la barra de direcciones de tu navegador, verás el código QR generado. ¡Eso es lo que mostrarías en la pantalla del celular del conductor!
+				- Paso B: Validar el Relevo (Simulando al Conductor que Recibe)
+					Ahora vamos a simular que el otro conductor escaneó el código.
+					- Busca el nuevo endpoint POST /relevo/validar-qr.
+					- En el campo token, pega el token_puro que obtuviste en el paso anterior.
+					- Ingresa el id del colaborador que entra. 
+					- Haz clic en Execute.
+					Resultado esperado: La API te responderá con los datos decodificados:
+					{
+						"mensaje": "¡Relevo verificado y confirmado exitosamente!",
+						"datos_decodificados": {
+							"placa": "XYZ-89E",
+							"kilometraje_recibido": 15450.5
+						},
+					"registro_db": "Actualizado (confirmada=True)"
+					}
+			
+					
+-------------------------------------------------------------------------------------	
+
+5. Necesitamos una estrategia usando imagenes de los vehiculos para dos casos:
+
+5.1 Caso 1: Verificar el estado del vehiculo. Para hacer la verificacion se manejan tres colores: verde si esta bueno, amarillo deteriorado y rojo malo. 
+5.2 Caso 2: Mostrar la informacion del vehiculo. Los informes para verificar si el estado del vehiculo se deben permitir en cualquier horario, o sea en tiempo real. 
+
+
+- Necesito que nos recomiendes la mejor estrategia usando computacion visual para resolver el caso 1 y 2 del punto 5. Ten en cuenta que vamos a tomar fotos de los vehiculos a verificar.  
+- Necesitamos almacenar fotos de los vehiculos en la BD, pero necesitamos almacenarlas de la manera mas optima, eficiente y facil de implementar.
+
+
+## 2. Estrategia de Computación Visual (Casos 1 y 2)
+
+[cite_start]Para resolver la verificación del estado del vehículo mediante fotos[cite: 102], implementaremos lo siguiente:
+
+### Caso 1: Verificación de Estado (Semáforo)
+Utilizaremos un modelo de **Clasificación de Imágenes** (puedes usar *AutoML Vision* de Google Cloud).
+1.  [cite_start]**Entrenamiento:** Se entrena el modelo con fotos etiquetadas de vehículos en estado Bueno (Verde), Deteriorado (Amarillo) y Malo (Rojo)[cite: 100].
+2.  **Inferencia:** El colaborador toma una foto; la IA analiza daños visibles (abolladuras, luces rotas) y sugiere un color. [cite_start]Esto reduce la subjetividad y el fraude[cite: 41].
+
+### Caso 2: Información en Tiempo Real
+[cite_start]Implementaremos **Reconocimiento Óptico de Caracteres (OCR)** para la placa y **Detección de Objetos** para documentos[cite: 41, 102].
+1.  [cite_start]Al detectar la placa, el sistema cruza los datos con la base de datos (o APIs externas como R6) para mostrar vigencia de SOAT y Tecnomecánica instantáneamente[cite: 41, 80].
+
+---
+
+
+### Fase 2: Inteligencia Artificial y Frontend
+4.  [cite_start]**Integración de Visión:** Configura la API de Google Vision para extraer texto de licencias y placas[cite: 41, 44].
+5.  [cite_start]**Frontend Amigable:** Diseña una interfaz con botones grandes y alto contraste, pensando en los usuarios de amplio rango de edad (18-60 años)[cite: 59, 95].
+6.  [cite_start]**Validaciones:** Implementa el flujo de confirmación de datos: si el usuario marca "No Correcto", el sistema permite actualizar antes de enviar[cite: 78, 79].
+
+### Fase 3: Despliegue y Alertas
+7.  [cite_start]**Dockerización:** Crea el `Dockerfile` de tu app y súbelo a Google Artifact Registry[cite: 92].
+8.  [cite_start]**Alertas Automáticas:** Configura un servicio (Cloud Functions) que revise diariamente la BD y envíe correos o notificaciones si un SOAT está por vencer[cite: 54].
+
+---
+

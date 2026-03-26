@@ -1,0 +1,288 @@
+Comportate como un experto en Hardware, S.O, en IA, en Ingenieria de software, en BD relacionales y NO relacionales, en Frontend, en BackEnd, en API FastAPI/Python, en redes, en Docker, en vagrant, AntiGravity IDE y VM. 
+Cuento con un PC de escritorio con un procesador Intel core 15 9400 cpu 2.90 GHz , 64 bits x64, 16 GB RAM. S.O Windows 11 pro version 25 Hz. Con la siguiente arquitectura de trabajo para desarrollo de Software en la nube:
+
+* **Windows 11  Pro version 25 Hz:** Host principal.
+* **VM Oracle y se instalo Linux Ubunto en un VM usando para ello Vagrant.         
+* **Docker Desktop:** Corriendo sobre WSL2 (limitado a 4GB RAM) y se instalo una imagen de MYSQL esta fucionando y se configuro sus variables de entorno.  
+* **VS Code:** Tu centro de mando conectándose a VM Linux y Docker usando SSH.
+* **Google 'Antigravity' AI IDE. Para este proyecto vamos a usar Antigravity IDE en lugar de VS Code. Al instalar Antigravity IDE se selecciono la opcion 'Import VS Code' y 'Agent-driven development'.
+
+Ahora estamos participando en una Hackaton en la institucion educativa PONAO para resolver siguiente problema:
+
+*** DESCRIPCIÓN DEL PROBLEMA ***:
+
+¿QUÉ INTENTAMOS RESOLVER? Con el fin de garantizar el buen estado de los vehículos se realiza un diligenciamiento del formato preoperacional, este evalúa el estado general del vehículo diariamente antes y después
+de la jornada laboral. Actualmente este diligenciamiento lo hacemos a través de una herramienta que hace el proceso extenso y poco práctico. Debido a su longitud y a que los colaboradores deben diligenciar información
+personal todos los días, la participación en las inspecciones es baja. Además, esta herramienta ya está llegando a un estado de obsolecencia que nos impide hacer el proceso dinámico, imposibilitando conectarlo a otros
+sistemas a través de API´s para facilitar las interacciones requeridas para un control efectivo y un manejo efectivo de los datos recolectados.
+
+¿QUÉ CONSECUENCIAS TIENE ESTO? Los colaboradores se reusan a diligenciar el formato, lo hacen con información falsa o no lo completan, esto le puede significar una sanción legal y económica a la empresa en caso de una
+auditoría o un accidente que suceda con un vehículo que no cumpla con los estandares que buscamos validar a traves del formulario.
+
+¿QUÉ BUSCAMOS EN ESTA NUEVA HERRAMIENTA? Es necesario mejorar la experiencia del usuario en el proceso de diligenciamiento del preoperacional, garantizar que los datos registrados sean verídicos, reducir las
+oportunidades de suplantación de un vehículo registrado previamente, conectividad con API´s, generar alertas automáticas, realizar validaciones aleatorias en el transcurso del día, revisiones de documentos públicos
+cómo SOAT, Tecnomecánica, licencias de conducción, multas, etc.
+
+*** Objetivo General ***
+
+Garantizar el buen estado de los vehiculos.
+
+Objetivos Especificos:
+
+- Garantizar que se va a mejorar la experiencia del usuario en el proceso de diligenciamiento del preoperacional.
+- Garantizar que los datos registrados en el proceso de diligenciamiento del preoperacional sean verídicos.
+- Garantizar que el diligenciamiento del formato preoperacional debe ser práctico y no debe ser extenso. Ya que deben diligenciar información personal todos los días. 
+- Garantizar la conexion a otros sistemas a través de API´s para facilitar las interacciones requeridas para un control y manejo efectivo de los datos recolectados.
+
+REQUERIMIENTOS FUNCIONALES:
+1.	Se requiere que, cuando el personal ingrese a la aplicacion aparezcan 4 apartados:
+		- Inspección de Motocicletas (automotor)
+		- Inspección de Bicicletas 
+		- Inspecciones de Patinetas eléctricas
+		- Inspección de Motos Eléctricas
+
+	Que le permitan registrar la motocicleta cuando sea la primera vez y que pueda validarlo constantemente para garantizar su veracidad.Los demás medios de transporte el sistema deberá dirigirlo a una pestaña
+	donde pueda seleccionar el activo fijo correspondiente al vehículo, y la selección del turno diurno/nocturno. Deberá aparecer la imagen de una motocicleta para facilitar la realización de la inspección, la
+	cual se levará a cabo mediante la siguiente clasificación:
+		- Verde: Bueno
+		- Amarilo: Deteriorado
+		- Rojo: Malo
+	
+	Adicionalmente, en todo momento el sistema deberá mostrar al colaborador las instrucciones y el significado de los colores. Si el colaborador cambia de motocicleta, el sistema debe permitirle actualizar
+	los datos del vehículo en cualquier momento. Una vez el colaborador realice la inspección y seleccione la opción de enviar, deberá aparecer un mensaje de confirmación indicando que los datos suministrados
+	son correctos. En caso de que el colaborador indique que no son correctos, el sistema deberá habilitar nuevamente la opción para actualizar la información del vehículo.
+
+2.	TABLAS DE LA BD
+	- DATOS DEL COLABORADOR:
+		- Id_Colaborador (PK). 
+		- Nombre.
+		- Cargo.
+		- Licencia de conducción (con su vigencia y categorías, restricciones, etc.)
+		- Visualización de multas (Se realiza a traves de una API al SIMIT).
+	- DATOS DEL SERVICIO:
+		- Id_Colaborador (PK).
+		- Fecha de la inspección del vehículo (con hora detallada YYYY-MM-DDThh:mm:ss.sssZ) (PK).
+		- Puesto (lugar donde se presta el servicio).
+		- Turno que realizará.
+	- DATOS DEL VEHÍCULO:
+		- Id_Colaborador (PK).
+		- Fecha de la inspección del vehículo (con hora detallada YYYY-MM-DDThh:mm:ss.sssZ) (PK).
+		- Placa (PK).
+		- Qué vehículo es, si es de la empresa o es propio del colaborador.
+		- SOAT.
+		- Tecnicomecánica.
+		- Verificación de las partes del vehículo (usar una API para que se conecte con el metodo de IA y poder comparar la img de la parte del vehiculo con los datos entrenados del vehiculo y de acuerdo
+		  al resultado almacenar su estado como: Bueno(Verde); Deteriorado (Amarillo); Malo(Rojo).
+		- Registro de kilometraje.
+		- Historial de mantenimientos.
+		- Reporte de Novedad. (nuevo campo)
+		
+	Nota: El colaborador, al iniciar su turno o recorrido, debe realizar la inspección del vehículo y registrar el kilometraje inicial al finalizar el recorrido o turno, deberá diligenciar únicamente el kilometraje
+	final o reportar alguna novedad. Esta información permitirá calcular la distancia recorrida durante el día y servirá como base de datos para determinar el total de kilómetros recorridos por la flota vehicular de
+	la empresa. Algunos vehículos son propios de la empresa que se usan para hacer recorridos en los puestos que se presta el servicio, otros son vehículos propios de los colaboradores para hacer recorridos en la
+	ciudad (por ejemplo, escoltas, supervisores, analistas, etc).
+
+	¿QUÉ REPORTES O RESULTADOS SE DEBEN GENERAR?
+		- Reporte diario de preoperacionales diligenciados: cantidad de fallas o alertas reportadas.
+		- Porcentaje de cumplimiento y colaboradores que no realizaron la inspección.
+		- También alertas de vencimiento de la documentación legal (licencia, SOAT, tecnomecanica, etc).
+
+*** METODOLOGIA DE TRABAJO ***:
+
+### PASO A: ARCHIVO 'PROMPT HACKATON OSZFORD - PASO A' ### Crear la estructura de directorios en la maquina local en la ruta: 'E:\VagrantVM\Ubuntu-Focal\OSZFORD-SYSTEM' y usar la función "Synced Folders"
+	(Carpetas Sincronizadas, entre la Maquina Local y la MV) de Vagrant y el repositorio en GitHub. Ten en cuanta que los 3 integrantes vamos a trabajar por tareas y en forma remota. Se debe Explicar datalladamente
+	como usar el repositorio local y el remoto por cada uno de los integrantes para que no se vayan a mezclar las actualizaciones que cada integrante realize al repositorio remoto. Al final se debe poder clonar el
+	repositorio remoto con la version final para sustentacion.  
+
+ 
+### PASO B: ###	 Conectividad y Creacion de la Base de Datos
+Ahora que la infraestructura de Git es sólida, vamos a por el código. El reto aquí es que tu FastAPI (corriendo dentro de la VM de Linux) hable con el MySQL (corriendo en Docker Desktop sobre Windows).   
+Ayudame a diseñar el **Modelo de Entidad-Relación (Base de Datos)** en MySQL para las tablas de Colaborador, Servicio y Vehículo, incluyendo los campos de IA que se solicita.
+Ten encuenta que el acceso a la aplicacion se hace con login y un método de seguridad al inicio de sesión como Autenticación Multifactor (MFA/2FA).
+
+### PASO C: ### El archivo models.py diseñado específicamente para tu base de datos oszford_db. Acceso a traves de un login, implementacion de un método de seguridad al inicio de sesión como Autenticación
+Multifactor (MFA/2FA) y formularios para inyectar informacion a la BD.
+ 
+### PASO D: ###  En este paso se REQUIERE:
+
+0. Usar la arquitectura, ver archivo: Arquitectura Mixta-ClienteServidor-y-Capas.png. Todos los cambios y ajustes deben usar esta arquitectura. 
+1. Modelo para la verificación de Estado del vehiculo:
+1.1. Utilizaremos un modelo de **Clasificación de Imágenes** (sera *AutoML Vision* de Google Cloud la mejor opcion gratuita y de implemetacion?)
+2. Usar una o varias imagenes de partes de un vehiculo para Verificar el estado de este vehiculo. 
+2.1. Para hacer la verificacion se manejan tres colores: verde si esta bueno, amarillo deteriorado y rojo malo. Eso significa que el sistema debe retornar al usuario que este enviando la solicitud de verificacion
+	 su estado: verde si esta bueno, amarillo deteriorado y rojo malo.
+2.2. El estado del vehiculo debe ser almacenado en la BD.
+2.3. Se debe buscar la estrategia mas optima y que consuma menos recursos y facil de implementar para almacenar las fotos de los vehiculos en la BD.
+3. Mostrar la informacion del vehiculo incluida la foto del vehiculo.  
+4. Estructura de la BD:
+			+-----------------------+
+			| Tables_in_oszford_db  |
+			+-----------------------+
+			| colaboradores         |
+			| inspecciones          |
+			| transferencias_relevo |
+			| vehiculos             |
+			+-----------------------+
+		 - Tabla colaboradores;
+			+-------------------+--------------+------+-----+---------+----------------+
+			| Field | Type         | Null | Key | Default | Extra     |				   |	
+			+-------------------+--------------+------+-----+---------+----------------+
+			| id_colaborador    | int          | NO   | PRI | NULL    | auto_increment |
+			| cedula            | varchar(15)  | NO   | UNI | NULL    |                |
+			| nombre            | varchar(100) | NO   |     | NULL    |                |
+			| email             | varchar(100) | NO   | UNI | NULL    |                |
+			| password_hash     | varchar(255) | NO   |     | NULL    |                |
+			| mfa_secret        | varchar(32)  | YES  |     | NULL    |                |
+			| cargo             | varchar(50)  | YES  |     | NULL    |                |
+			| licencia_nro      | varchar(20)  | YES  |     | NULL    |                |
+			| licencia_vigencia | date         | YES  |     | NULL    |                |
+			| activo            | tinyint(1)   | YES  |     | 1       |                |
+			+-------------------+--------------+------+-----+---------+----------------+
+		 - Tabla inspecciones;
+			+-----------------------+---------------------------------+------+-----+-------------------+-------------------+
+			| Field                 | Type                            | Null | Key | Default           | Extra             |
+			+-----------------------+---------------------------------+------+-----+-------------------+-------------------+
+			| id_inspeccion         | int                             | NO   | PRI | NULL              | auto_increment    |
+			| id_colaborador        | int                             | YES  | MUL | NULL              |                   |
+			| placa                 | varchar(10)                     | YES  | MUL | NULL              |                   |
+			| fecha_hora            | timestamp                       | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+			| km_registro           | decimal(10,2)                   | YES  |     | NULL              |                   |
+			| estado_visual_ia      | enum('Verde','Amarillo','Rojo') | YES  |     | NULL              |                   |
+			| url_foto_verificacion | varchar(255)                    | YES  |     | NULL              |                   |
+			| novedades             | text                            | YES  |     | NULL              |                   |
+			+-----------------------+---------------------------------+------+-----+-------------------+-------------------+
+		- Tabla transferencias_relevo;
+			+----------------------+---------------+------+-----+-------------------+-------------------+
+			| Field                | Type          | Null | Key | Default           | Extra             |
+			+----------------------+---------------+------+-----+-------------------+-------------------+
+			| id_transferencia     | int           | NO   | PRI | NULL              | auto_increment    |
+			| placa                | varchar(10)   | YES  | MUL | NULL              |                   |
+			| id_colaborador_sale  | int           | YES  | MUL | NULL              |                   |
+			| id_colaborador_entra | int           | YES  | MUL | NULL              |                   |
+			| km_entrega           | decimal(10,2) | YES  |     | NULL              |                   |
+			| token_qr_hash        | varchar(500)  | YES  | UNI | NULL              |                   |
+			| fecha_generacion     | timestamp     | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+			| confirmada           | tinyint(1)    | YES  |     | 0                 |                   |
+			+----------------------+---------------+------+-----+-------------------+-------------------+
+		 - Tabla vehiculos;
+			+---------------------+------------------------------------------------------------------+------+-----+---------+-------+
+			| Field               | Type                                                             | Null | Key | Default | Extra |
+			+---------------------+------------------------------------------------------------------+------+-----+---------+-------+
+			| placa               | varchar(10)                                                      | NO   | PRI | NULL    |       |
+			| tipo                | enum('Moto','Bicicleta','Patineta Eléctrica','Moto Eléctrica')   | NO   |     | NULL    |       |
+			| propiedad           | enum('Empresa','Propio')                                         | NO   |     | NULL    |       |
+			| soat_vencimiento    | date                                                             | YES  |     | NULL    |       |
+			| tecnico_vencimiento | date                                                             | YES  |     | NULL    |       |
+			| foto_referencia_url | varchar(255)                                                     | YES  |     | NULL    |       |
+			+---------------------+------------------------------------------------------------------+------+-----+---------+-------+
+
+*** SOLUCION ***
+
+1. Implementación de IA, Almacenamiento y Lógica de Inspección
+	Siguiendo la estrategia de primero funcional en local y luego a la nube, aquí tienes la hoja de ruta técnica:
+	1.1. Verificación del Estado con IA. El requerimiento pide un modelo de 'CLASIFICACION DE IMAGENES' para determinar si una parte del vehículo está Verde (Bueno), Amarillo (Deteriorado) o Rojo (Malo).
+		 - Estrategia Técnica: Utilizaremos la API de Google Vision.
+			- Por qué: Es la opción más robusta para la Hackatón. Ofrece 1,000 análisis gratuitos al mes (Capa Gratuita), lo que cubre de sobra el prototipo.
+			- Implementación: El backend en FastAPI recibirá la foto, la enviará a Google Vision para detectar anomalías (grietas, abolladuras, luces rotas) y retornará el código de color al usuario.
+	1.2. Gestión de Imágenes y Base de Datos. No saturaremos la base de datos MySQL con archivos pesados.		
+		- Almacenamiento: Las fotos se subirán a Google Cloud Storage (5 GB gratis/mes).
+		- Registro en BD: En la tabla inspecciones de tu oszford_db, solo guardaremos la URL pública de la imagen. Esto cumple con el requerimiento de "estrategia más óptima que consuma menos recursos".
+	1.3. Flujo de Inspección Práctico. Para evitar que el proceso sea extenso:	
+		- Persistencia de Datos: El sistema recordará los datos del colaborador para que no los digite a diario.
+		- Validación de Salida: Antes de guardar, se muestra un mensaje de confirmación. Si el usuario detecta un error, el sistema permite actualizar los datos inmediatamente sin reiniciar todo el formulario.
+	1.4. Integración de APIs Externas. El sistema debe ser capaz de conectarse para validar documentos legales:
+		- API SIMIT: Para la visualización de multas en tiempo real.
+		- Validación de Documentos: Se usará OCR (Reconocimiento de Caracteres) para extraer automáticamente la vigencia del SOAT y la Tecnomecánica desde la foto de los documentos
+
+*** IMPLEMETACION ***
+1. Capa de Datos: 
+Para que el sistema de alertas e IA funcione, la BD debe ser capaz de almacenar los resultados del análisis. En tu contenedor de MySQL, debemos asegurar que la tabla de inspecciones tenga estos campos clave:
+- url_foto_evidencia (VARCHAR) -> En la BD esta como: url_foto_verificacion (VARCHAR): Para la ruta de la imagen. *** No se modifica en la BD. ***
+- resultado_ia_color (ENUM) -> En la BD esta como: estado_visual_ia (ENUM): Verde, Amarillo, Rojo) El veredicto de la IA. *** No se modifica en la BD. ***
+
+- confianza_ia: (FLOAT) Qué tan segura está la IA del resultado. *** Agregar a la BD. ***
+- alerta_enviada: (BOOLEAN) Para saber si ya se notificó al administrador. *** Agregar a la BD. ***
+			+-----------------------+---------------------------------+------+-----+-------------------+-------------------+
+			| Field                 | Type                            | Null | Key | Default           | Extra             |
+			+-----------------------+---------------------------------+------+-----+-------------------+-------------------+
+			| id_inspeccion         | int                             | NO   | PRI | NULL              | auto_increment    |
+			| ...                   | ...                             | ...  | ... | ...               | ...               |
+			| estado_visual_ia      | enum('Verde','Amarillo','Rojo') | YES  |     | NULL              |                   |
+			| url_foto_verificacion | varchar(255)                    | YES  |     | NULL              |                   |
+			| novedades             | text                            | YES  |     | NULL              |                   |
+			+-----------------------+---------------------------------+------+-----+-------------------+-------------------+
+mysql> ALTER TABLE inspecciones
+    -> ADD COLUMN confianza_ia FLOAT DEFAULT 0.0 AFTER estado_visual_ia,
+    -> ADD COLUMN alerta_enviada BOOLEAN DEFAULT FALSE AFTER url_foto_verificacion;
+Query OK, 0 rows affected (0.13 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+mysql> DESC inspecciones;
++-----------------------+---------------------------------+------+-----+-------------------+-------------------+
+| Field                 | Type                            | Null | Key | Default           | Extra             |
++-----------------------+---------------------------------+------+-----+-------------------+-------------------+
+| id_inspeccion         | int                             | NO   | PRI | NULL              | auto_increment    |
+| id_colaborador        | int                             | YES  | MUL | NULL              |                   |
+| placa                 | varchar(10)                     | YES  | MUL | NULL              |                   |
+| fecha_hora            | timestamp                       | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
+| km_registro           | decimal(10,2)                   | YES  |     | NULL              |                   |
+| estado_visual_ia      | enum('Verde','Amarillo','Rojo') | YES  |     | NULL              |                   |
+| confianza_ia          | float                           | YES  |     | 0                 |                   |
+| url_foto_verificacion | varchar(255)                    | YES  |     | NULL              |                   |
+| alerta_enviada        | tinyint(1)                      | YES  |     | 0                 |                   |
+| novedades             | text                            | YES  |     | NULL              |                   |
++-----------------------+---------------------------------+------+-----+-------------------+-------------------+
+10 rows in set (0.02 sec)
+mysql>
+- ¿Por qué agregarlos en este orden?
+	- confianza_ia después de estado_visual_ia: Mantiene la coherencia lógica. Primero tienes el resultado del color y justo al lado qué tan segura está la IA de ese color.
+	- alerta_enviada después de url_foto_verificacion: Facilita la auditoría. Si hay una foto de evidencia que disparó una alerta, puedes ver inmediatamente si el sistema ya notificó al administrador.
+
+2. Lógica del Sistema de Alertas 
+Para cumplir con el requerimiento de la Hackaton, necesitamos una función en el Backend que tome una decisión basada en el resultado de la IA.
+- ¿Cómo funcionará?
+	La IA analiza la foto.
+	- Si el resultado es 'Rojo', el sistema dispara un correo electrónico al administrador.
+	- Se marca alerta_enviada = True en la base de datos para registro histórico.
+
+
+-------------------------
+. Próximo paso: Integración con Google Vision
+Como ya validamos que la estructura de carpetas funciona, el siguiente paso técnico es crear el servicio que procesa la imagen.
+
+Para avanzar de forma "Ingenieril", ¿te gustaría que redactemos ahora el archivo services/ia_service.py para simular la detección de "Rojo, Amarillo, Verde" o prefieres que hagamos primero
+el endpoint en main.py para recibir los datos del formulario?
+
+
+
+
+
+
+ 
+
+## 2. Estrategia de Computación Visual (Casos 1 y 2)
+
+[cite_start]Para resolver la verificación del estado del vehículo mediante fotos[cite: 102], implementaremos lo siguiente:
+
+### Caso 1: Verificación de Estado (Semáforo)
+Utilizaremos un modelo de **Clasificación de Imágenes** (puedes usar *AutoML Vision* de Google Cloud).
+1.  [cite_start]**Entrenamiento:** Se entrena el modelo con fotos etiquetadas de vehículos en estado Bueno (Verde), Deteriorado (Amarillo) y Malo (Rojo)[cite: 100].
+2.  **Inferencia:** El colaborador toma una foto; la IA analiza daños visibles (abolladuras, luces rotas) y sugiere un color. [cite_start]Esto reduce la subjetividad y el fraude[cite: 41].
+
+### Caso 2: Información en Tiempo Real
+[cite_start]Implementaremos **Reconocimiento Óptico de Caracteres (OCR)** para la placa y **Detección de Objetos** para documentos[cite: 41, 102].
+1.  [cite_start]Al detectar la placa, el sistema cruza los datos con la base de datos (o APIs externas como R6) para mostrar vigencia de SOAT y Tecnomecánica instantáneamente[cite: 41, 80].
+
+---
+
+
+### Fase 2: Inteligencia Artificial y Frontend
+4.  [cite_start]**Integración de Visión:** Configura la API de Google Vision para extraer texto de licencias y placas[cite: 41, 44].
+5.  [cite_start]**Frontend Amigable:** Diseña una interfaz con botones grandes y alto contraste, pensando en los usuarios de amplio rango de edad (18-60 años)[cite: 59, 95].
+6.  [cite_start]**Validaciones:** Implementa el flujo de confirmación de datos: si el usuario marca "No Correcto", el sistema permite actualizar antes de enviar[cite: 78, 79].
+
+### Fase 3: Despliegue y Alertas
+7.  [cite_start]**Dockerización:** Crea el `Dockerfile` de tu app y súbelo a Google Artifact Registry[cite: 92].
+8.  [cite_start]**Alertas Automáticas:** Configura un servicio (Cloud Functions) que revise diariamente la BD y envíe correos o notificaciones si un SOAT está por vencer[cite: 54].
+
+---
+

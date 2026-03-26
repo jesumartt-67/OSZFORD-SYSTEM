@@ -344,9 +344,3 @@ Para el despliegue final, mi recomendación experta es **Google Cloud (GCP)** a 
 * **¿Por qué?:** Google ofrece una instancia `e2-micro` siempre gratuita en ciertas regiones.
 * **IA:** Si vamos a usar APIs de visión (para comparar las fotos de las motos), Google Cloud Vision tiene una capa gratuita muy generosa de 1,000 unidades al mes.
 * **Docker:** Podemos usar **Cloud Run**, que solo cobra por milisegundo de ejecución (si no hay nadie usando la app, el costo es $0).
-
-
-### PASO B: ###	Creacion de la BD
-¿Te gustaría que una vez creados los archivos, configuremos la conexión a la base de datos MySQL que ya tienes corriendo en Docker?
-¿Deseas que diseñe el **Modelo de Entidad-Relación (Base de Datos)** en MySQL para las tablas de Colaborador, Servicio y Vehículo, incluyendo los campos de IA que solicitaste? Sería el corazón de nuestra solución.
--------------------------------------------------------------------------------------	

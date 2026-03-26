@@ -49,7 +49,9 @@ CREATE TABLE IF NOT EXISTS inspecciones (
     fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     km_registro DECIMAL(10,2),
     estado_visual_ia ENUM('Verde', 'Amarillo', 'Rojo'),
+    confianza_ia FLOAT NULL,	
     url_foto_verificacion VARCHAR(255),
+    alerta_enviada BOOLEAN DEFAULT TRUE NULL,
     novedades TEXT,
     FOREIGN KEY (id_colaborador) REFERENCES colaboradores(id_colaborador),
     FOREIGN KEY (placa) REFERENCES vehiculos(placa)
