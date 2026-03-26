@@ -119,5 +119,41 @@ Ahora que el respaldo de la tarea está en la nube, vamos a "unificar" todo en l
 -----------------
 Bash
 -----------------
-git checkout main
+vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ git checkout main
 ----------------
+Trae los cambios de la tarea al main:
+---------------------
+Bash
+----------------------
+vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ git merge feature/aut-multifactor-y-model
+------------------------
+Sube el main definitivo a GitHub:
+------------------------
+Bash
+vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ git push origin main
+------------------------
+
+Si todo se ve correcto, termina la secuencia así:
+Como ya estamos en la rama de la tarea, dale el empujón final al repositorio:
+
+Asegura los archivos:
+
+Bash
+git add .
+Crea el commit:
+
+Bash
+git commit -m "Estructura final de modelos y autenticación para el equipo"
+Sube tu rama de trabajo:
+
+Bash
+git push origin feature/aut-multifactor-y-model
+Pásalo a main:
+
+Bash
+git checkout main
+git merge feature/aut-multifactor-y-model
+git push origin main
+El link para tus compañeros:
+Una vez que termines el último push origin main, diles que este es el repositorio oficial:
+https://github.com/jesumartt-67/OSZFORD-SYSTEM
