@@ -65,3 +65,59 @@ git merge feature/jesus-tarea
 git push origin main
 ¿Cómo saber si funcionó?
 Una vez que termines el Paso F, las letras U y M en tu VS Code deberían desaparecer. Eso significa que tu copia local y la de la nube están perfectamente "espejadas".
+
+
+----------------------------
+1. Crear la nueva rama y moverte a ella
+Estando en tu terminal de Vagrant (dentro de la carpeta del proyecto), crea la rama para la nueva tarea:
+----------------------
+Bash
+---------------------
+vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ git checkout -b feature/aut-multifactor-y-model
+Switched to a new branch 'feature/aut-multifactor-y-model'
+vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$
+-----------------------
+Esto crea la rama y te posiciona en ella automáticamente.
+2. Guardar y subir el trabajo a esa rama
+Ahora vamos a registrar lo que ya hiciste en esta nueva rama:
+Agrega los cambios:
+-----------------------
+Bash
+-----------------------
+vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ git add .
+vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ 
+----------------------
+3. Crea el commit:
+-------------------------
+Bash
+--------------------------
+vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ git commit -m "Implementación inicial de Autenticación Multifactor y Modelos"
+[feature/aut-multifactor-y-model 72c23c2] Implementación inicial de Autenticación Multifactor y Modelos
+ 22 files changed, 1227 insertions(+), 312 deletions(-)
+ create mode 100644 backend/__init__.py
+ create mode 100644 backend/__pycache__/__init__.cpython-38.pyc
+ ...
+ create mode 100644 docs/PROMPT HACKATON OSZFORD - PASO D.txt
+vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ 
+------------------------
+4. Sube la rama al servidor (GitHub):
+--------------------------
+Bash
+--------------------------
+vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ git push origin feature/aut-multifactor-y-model
+Username for 'https://github.com': jesumartt
+Password for 'https://jesumartt@github.com': <encuentre el pass en el archivo 'tokes del proyecto.txt'>
+Enumerating objects: 40, done.
+...
+To https://github.com/jesumartt-67/OSZFORD-SYSTEM.git
+ * [new branch]      feature/aut-multifactor-y-model -> feature/aut-multifactor-y-model
+vagrant@ubuntu-focal:~/OSZFORD-SYSTEM$ git push origin feature/aut-multifactor-y-model
+---------------------------
+1. Actualizar la rama MAIN
+Ahora que el respaldo de la tarea está en la nube, vamos a "unificar" todo en la rama principal para tus compañeros:
+2. Regresa a main:
+-----------------
+Bash
+-----------------
+git checkout main
+----------------
